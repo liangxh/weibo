@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-fobj = open('res.txt', 'r')
+fobj = open('status_count.txt', 'r')
 content = fobj.read()
 fobj.close()
 
