@@ -10,12 +10,7 @@ Description: a script for access to mysql.weibo
 
 import MySQLdb as db
 
-con = None
-
 def connect():
-	if con:
-		return con
-
 	try:
 		con = db.connect('localhost', 'weiboguest', 'weiboguest', 'weibo')
 		return con
