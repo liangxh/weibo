@@ -68,7 +68,7 @@ def report(uid):
 
 	emoticons = tohist(emoticons)
 	emoticons = sorted(emoticons.items(), key = lambda k: -k[1])
-	top_emotions = emoticons[:3] if len(emoticons > 3) else emoticons	
+	top_emotions = emoticons[:3] if len(emoticons) > 3 else emoticons	
 
 	report = ''
 	report += '# of valid blogs: %d\n'%(valid_count)
@@ -85,7 +85,10 @@ def sampling():
 	sorted_items = sorted(hlist_count.items(), key = lambda k: - len(k[1]))
 	uid = sorted_items[0][1][0]
 
-	report(uid)
+	report(sorted_items[0][1][0])
+	report(sorted_items[0][1][1])
+	report(sorted_items[0][1][2])
+	
 
 if __name__ == '__main__':
 	sampling()
