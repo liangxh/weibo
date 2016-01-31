@@ -53,7 +53,7 @@ def extract(blog):
 
 	phrases = [emotica.remove_prefix(emo) for emo in emoticons]
 	phrases = set(phrases)
-	print ', '.join(list(phrases))
+	#print ', '.join(list(phrases))
 	if len(phrases) > 1:
 		'''
 		more than one distinct emoticons within this blog

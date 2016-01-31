@@ -77,8 +77,8 @@ class Emotica:
 	def has_emoticon(self, text):
 		m = re.search(self._pattern_emo, text)
 
-		if m:
-			print m.group(1)
+		#if m:
+		#	print m.group(1)
 
 		return not m == None
 

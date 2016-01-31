@@ -54,16 +54,28 @@ def report(uid):
 
 	valid_count = 0
 	comment_count = 0
-	for text, comments_count in cur:
-		if datica.is_valid(text):
-			valid_count += 1
 
-		if comment_count > 0:
-			comment_count += 1
+	emoticons = []
+	for text, comments_count in cur:
+		res = datica.extract(text)
+		if not res == None:
+			text, emoticon = res
+			emoticons.append(emoticon)
+
+			valid_count += 1
+			if comment_count > 0:
+				comment_count += 1
+
+	emoticons = tohist(emoticons)
+	emoticons = sorted(emoticons.items(), key = lambda k: -k[1])
+	top_emotions = emoticons[:3] if len(emoticons > 3) else emoticons	
 
 	report = ''
-	report += 'VALID: %d\n'%(valid_count)
-	report += 'HAS_COMMENT: %d\n'%(comment_count)
+	report += '# of valid blogs: %d\n'%(valid_count)
+	report += '# of blogs with comments: %d\n'%(comment_count)
+	report += '# of emoticons: %d\n'%(len(emoticons))
+	report += 'top 3 (or less) emoticons: %s\n'%(', '.join(['%s(%d)'%(k, v) for k, v in top_emoticons]))
+		
 	print report 
 
 def sampling():
