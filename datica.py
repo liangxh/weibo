@@ -60,12 +60,12 @@ def extract(blog):
 		'''
 		return None
 
-	emo = list(phrases)[0]
-	text = re.sub('\s+', ' ', text)
+	emo = emotica.remove_prefix(list(phrases)[0])
+	text = re.sub('\s+', ' ', text).strip()
 	return text, emo
 
 if __name__ == '__main__':
-	t = u'你好[yz抽风] [yz抽风] 我是 [yz抽风] 梁錫豪'
+	t = u'四核旗舰对决 十款热门手机对比导购 http://t.cn/zWcJdvt  （分享自 @新浪科技） 有什么能取代我的大5230？[哈哈]'
 	t = textcleaner.simplify_chinese(t)
 	res = extract(t)
 	if res == None:
@@ -73,3 +73,4 @@ if __name__ == '__main__':
 	else:
 		text, emo = res
 		print '%s|%s'%(text, emo)
+

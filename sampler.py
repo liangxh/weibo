@@ -10,6 +10,7 @@ Description: sampling and filtering blogs in the database
 #import db
 
 import cPickle
+from share import emotica
 from const import TXT_STATUS_COUNT, PKL_REPORT
 from utils import timer, progbar
 
@@ -59,19 +60,20 @@ def analyse(uid):
 	emoticons = []
 	for text, comments_count in cur:
 		res = datica.extract(text)
-		if not res == None:
-			text, emoticon = res
-			emoticons.append(emoticon)
+		if res == None:
+			continue
+		
+		text, emo = res
+		emoticons.append(emo)
 
-			valid_count += 1
-			if comments_count > 0:
-				comm_count += 1
+		valid_count += 1
+		if comments_count > 0:
+			comm_count += 1
 
 	emoticons = tohist(emoticons)
 		
 	return valid_count, comm_count, emoticons
 
-@timer()
 def sampling():
 	status_count = get_status_count()
 	hlist_count = tohlist(status_count)
@@ -79,7 +81,7 @@ def sampling():
 	sorted_items = sorted(hlist_count.items(), key = lambda k: - len(k[1]))
 	
 	sample_items = []
-	sample_items.extend(sorted_items[0][1])
+	sample_items.extend(sorted_items[1][1])
 
 	valid_list = []
 	comm_list = []
@@ -108,9 +110,6 @@ def sampling():
 	comm_hist = tohist(comm_list)
 
 	cPickle.dump((valid_hist, comm_hist, emo_tf, emo_df), open(PKL_REPORT, 'w'))
-
-def report2graph():
-	valid_hist, comm_hist, emo_tf, emo_df = cPickle(open(PKL_REPORT, 'r'))
 	
 
 if __name__ == '__main__':
