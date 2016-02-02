@@ -55,7 +55,7 @@ def analyse(uid):
 	cur.execute('SELECT text, comments_count FROM microblogs WHERE user_id=%s'%(uid))
 
 	valid_count = 0
-	comment_count = 0
+	comm_count = 0
 
 	emoticons = []
 	for text, comments_count in cur:
@@ -65,8 +65,8 @@ def analyse(uid):
 			emoticons.append(emoticon)
 
 			valid_count += 1
-			if comment_count > 0:
-				comment_count += 1
+			if comments_count > 0:
+				comm_count += 1
 
 	emoticons = tohist(emoticons)
 		
@@ -107,6 +107,7 @@ def sampling():
 
 def report2graph():
 	valid_hist, comm_hist, emo_tf, emo_df = cPickle(open(PKL_REPORT, 'r'))
+	
 
 if __name__ == '__main__':
 	sampling()
