@@ -8,7 +8,9 @@ Description:
 '''
 
 #import db
-from const import TXT_STATUS_COUNT
+
+import cPickle
+from const import TXT_STATUS_COUNT, PKL_REPORT
 from utils import timer
 
 def tohist(ls):
@@ -44,7 +46,7 @@ def get_status_count():
 	return status_count
 
 @timer()
-def report(uid):
+def analyse(uid):
 	import db
 	import datica
 
@@ -67,28 +69,44 @@ def report(uid):
 				comment_count += 1
 
 	emoticons = tohist(emoticons)
-	emoticons = sorted(emoticons.items(), key = lambda k: -k[1])
-	top_emotions = emoticons[:3] if len(emoticons) > 3 else emoticons	
-
-	report = ''
-	report += '# of valid blogs: %d\n'%(valid_count)
-	report += '# of blogs with comments: %d\n'%(comment_count)
-	report += '# of emoticons: %d\n'%(len(emoticons))
-	report += 'top 3 (or less) emoticons: %s\n'%(', '.join(['%s(%d)'%(k, v) for k, v in top_emoticons]))
 		
-	print report 
+	return valid_count, comm_count, emoticons
 
 def sampling():
 	status_count = get_status_count()
 	hlist_count = tohlist(status_count)
 
 	sorted_items = sorted(hlist_count.items(), key = lambda k: - len(k[1]))
-	uid = sorted_items[0][1][0]
-
-	report(sorted_items[0][1][0])
-	report(sorted_items[0][1][1])
-	report(sorted_items[0][1][2])
 	
+	sample_items = []
+	sample_items.extend(sorted_items[0][1])
+
+	valid_list = {}
+	comm_list = {}
+	emo_tf = {}
+	emo_df = {}
+
+	for uid in sample_items:
+		valid_count, comm_count, emos = analyse(uid)
+		
+		valid_list.append(valid_count)
+		comm_list.append(comm_count)
+		
+		for emo, count in emos:
+			if emo_tf.has_key(emo):
+				emo_tf[emo] += count
+				emo_df[emo] += 1
+			else:
+				emo_tf[emo] = count
+				emo_df[emo] = 1
+
+	valid_hist = tohist(valid_list)
+	comm_hist = tohist(comm_list)
+
+	cPickle.dump((valid_hist, comm_hist, emo_tf, emo_df), open(PKL_REPORT, 'w'))
+
+def report2graph():
+	valid_hist, comm_hist, emo_tf, emo_df = cPickle(open(PKL_REPORT, 'r'))
 
 if __name__ == '__main__':
 	sampling()
