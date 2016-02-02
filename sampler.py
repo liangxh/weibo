@@ -86,7 +86,7 @@ def sampling():
 	emo_tf = {}
 	emo_df = {}
 
-	pbar = progressbar.start(len(sample_items))
+	pbar = progbar.start(len(sample_items))
 
 	for i, uid in enumerate(sample_items):
 		valid_count, comm_count, emos = analyse(uid)
