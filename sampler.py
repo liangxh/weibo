@@ -81,8 +81,8 @@ def sampling():
 	sample_items = []
 	sample_items.extend(sorted_items[0][1])
 
-	valid_list = {}
-	comm_list = {}
+	valid_list = []
+	comm_list = []
 	emo_tf = {}
 	emo_df = {}
 
