@@ -68,7 +68,7 @@ def report(uid):
 
 	emoticons = tohist(emoticons)
 	emoticons = sorted(emoticons.items(), key = lambda k: -k[1])
-	top_emotions = emoticons[:3] if len(emoticons) > 3 else emoticons	
+	top_emoticons = emoticons[:3] if len(emoticons) > 3 else emoticons	
 
 	report = ''
 	report += '# of valid blogs: %d\n'%(valid_count)
