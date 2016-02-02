@@ -7,13 +7,16 @@ Modified: 2016.01.28
 Description: stores const variables for sharing 
 '''
 
-TXT_STATUS_COUNT = 'status_count.txt'
-PKL_REPORT = 'report.pkl'
+DIR_DATA = 'data/'
+DIR_OUTPUT = 'output/'
 
-JSON_EMO = 'emoticon.json'
+TXT_STATUS_COUNT = DIR_DATA + 'status_count.txt'
+PKL_REPORT = DIR_DATA + 'report.pkl'
+
+JSON_EMO = DIR_DATA + 'emoticon.json'
 URL_EMO = 'http://weibo.com/aj/mblog/face?type=face&_wv=5&ajwvr=6&__rnd=1453464129146'
 
-WEIBO_COOKIE = open('weibo_cookie.txt', 'r').read()
+WEIBO_COOKIE = open(DIR_DATA + 'weibo_cookie.txt', 'r').read()
 WEIBO_MYID = '1784127181'
 
 STATUS_COUNT_MAX = 1000

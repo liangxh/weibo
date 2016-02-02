@@ -3,15 +3,15 @@
 '''
 Author: Xihao Liang
 Created: 2016.01.29
-Modified: 2016.01.29
-Description: 
+Modified: 2016.02.02
+Description: sampling and filtering blogs in the database
 '''
 
 #import db
 
 import cPickle
 from const import TXT_STATUS_COUNT, PKL_REPORT
-from utils import timer
+from utils import timer, progbar
 
 def tohist(ls):
 	hist = {}
@@ -45,7 +45,6 @@ def get_status_count():
 
 	return status_count
 
-@timer()
 def analyse(uid):
 	import db
 	import datica
@@ -72,6 +71,7 @@ def analyse(uid):
 		
 	return valid_count, comm_count, emoticons
 
+@timer()
 def sampling():
 	status_count = get_status_count()
 	hlist_count = tohlist(status_count)
@@ -86,19 +86,23 @@ def sampling():
 	emo_tf = {}
 	emo_df = {}
 
-	for uid in sample_items:
+	pbar = progressbar.start(len(sample_items))
+
+	for i, uid in enumerate(sample_items):
 		valid_count, comm_count, emos = analyse(uid)
 		
 		valid_list.append(valid_count)
 		comm_list.append(comm_count)
 		
-		for emo, count in emos:
+		for emo, count in emos.items():
 			if emo_tf.has_key(emo):
 				emo_tf[emo] += count
 				emo_df[emo] += 1
 			else:
 				emo_tf[emo] = count
 				emo_df[emo] = 1
+		pbar.update(i + 1)
+	pbar.finish()
 
 	valid_hist = tohist(valid_list)
 	comm_hist = tohist(comm_list)
