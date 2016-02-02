@@ -45,7 +45,6 @@ def get_status_count():
 
 	return status_count
 
-@timer()
 def analyse(uid):
 	import db
 	import datica
@@ -72,6 +71,7 @@ def analyse(uid):
 		
 	return valid_count, comm_count, emoticons
 
+@timer()
 def sampling():
 	status_count = get_status_count()
 	hlist_count = tohlist(status_count)
@@ -92,7 +92,7 @@ def sampling():
 		valid_list.append(valid_count)
 		comm_list.append(comm_count)
 		
-		for emo, count in emos:
+		for emo, count in emos.items():
 			if emo_tf.has_key(emo):
 				emo_tf[emo] += count
 				emo_df[emo] += 1
