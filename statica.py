@@ -9,21 +9,21 @@ Description: create statistics report from mysql
 
 import cPickle
 
-from share import db, datica
+import db, datica
 from const import TOTAL_BLOGS, PKL_EMO_MIDS
 from utils import progbar
 
 def collect_emo_mid():
-	status_count = get_status_count()
+	print 'connecting to MySQL..'
 	con = db.connect()
-	cur = con.cursor()
-	cur.execute('SELECT uid, mid, text FROM users')
-	
-	pbar = progbar.start(TOTAL_BLOGS)
-	loop = 0
-	
-	emo_mids = {}
 
+	print 'start..'
+	cur = con.cursor()
+	cur.execute('SELECT mid, text FROM microblogs')
+	
+	pbar = progbar.start(TOTAL_BLOGS)	
+	loop = 0
+	emo_mids = {}
 	for mid, text in cur:
 		res = datica.extract(text)
 		if res == None:
