@@ -11,7 +11,12 @@ import MySQLdb as db
 
 def connect():
 	try:
-		con = db.connect('localhost', 'weiboguest', 'weiboguest', 'weibo', 'utf8')
+		con = db.connect(host = 'localhost', 
+				user = 'weiboguest',
+				passwd = 'weiboguest',
+				db = 'weibo',
+				charset = 'utf8'
+			)
 		cur = con.cursor()
 		cur.execute('SET NAMES utf8')
 		cur.commit()
