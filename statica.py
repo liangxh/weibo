@@ -21,7 +21,7 @@ def collect_emo_mid():
 
 	print 'start..'
 	cur = con.cursor()
-	cur.execute('SELECT mid, text FROM microblogs')
+	cur.execute('SELECT mid, text FROM microblogs WHERE comments_count > 1')
 	
 	pbar = progbar.start(TOTAL_BLOGS)	
 	loop = 0
@@ -36,13 +36,13 @@ def collect_emo_mid():
 			emo_mids[emo].append(mid)
 		else:
 			emo_mids[emo] = [mid, ]
-	
+
 		loop += 1
 		pbar.update(loop)
 
 	pbar.finish()
 
-	cPickle.dump(emo_mids, PKL_EMO_MIDS)
+	cPickle.dump(emo_mids, open(PKL_EMO_MIDS, 'w'))
 
 if __name__ == '__main__':
 	collect_emo_mid()
