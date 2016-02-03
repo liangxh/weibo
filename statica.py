@@ -14,15 +14,16 @@ from const import TOTAL_BLOGS, PKL_EMO_MIDS
 from utils import progbar
 
 def collect_emo_mid():
+	print 'connecting to MySQL..'
 	con = db.connect()
+
+	print 'start..'
 	cur = con.cursor()
 	cur.execute('SELECT mid, text FROM microblogs')
 	
-	pbar = progbar.start(TOTAL_BLOGS)
+	pbar = progbar.start(TOTAL_BLOGS)	
 	loop = 0
-	
 	emo_mids = {}
-
 	for mid, text in cur:
 		res = datica.extract(text)
 		if res == None:
