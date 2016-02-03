@@ -8,6 +8,9 @@ Description: create statistics report from mysql
 '''
 
 import cPickle
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 import db, datica
 from const import TOTAL_BLOGS, PKL_EMO_MIDS
@@ -21,7 +24,7 @@ def collect_emo_mid():
 
 	print 'start..'
 	cur = con.cursor()
-	cur.execute('SELECT mid, text FROM microblogs')
+	cur.execute('SELECT mid, text FROM microblogs WHERE comments_count > 1')
 	
 	pbar = progbar.start(TOTAL_BLOGS)	
 	loop = 0
@@ -42,7 +45,7 @@ def collect_emo_mid():
 
 	pbar.finish()
 
-	cPickle.dump(emo_mids, PKL_EMO_MIDS)
+	cPickle.dump(emo_mids, open(PKL_EMO_MIDS, 'w'))
 
 if __name__ == '__main__':
 	collect_emo_mid()

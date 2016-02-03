@@ -11,7 +11,10 @@ import MySQLdb as db
 
 def connect():
 	try:
-		con = db.connect('localhost', 'weiboguest', 'weiboguest', 'weibo')
+		con = db.connect('localhost', 'weiboguest', 'weiboguest', 'weibo', 'utf8')
+		cur = con.cursor()
+		cur.execute('SET NAMES utf8')
+		cur.commit()
 		return con
 	except db.Error, e:
 		print 'MySQL: [ERRNO %d] %s'%(e.args[0], e.args[1])
