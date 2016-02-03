@@ -40,7 +40,7 @@ def collect_emo_mid():
 
 	pbar.finish()
 
-	cPickle(emo_mids, PKL_EMO_MIDS)
+	cPickle.dump(emo_mids, PKL_EMO_MIDS)
 
 if __name__ == '__main__':
 	collect_emo_mid()
