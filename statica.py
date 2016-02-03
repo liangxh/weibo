@@ -8,6 +8,9 @@ Description: create statistics report from mysql
 '''
 
 import cPickle
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 import db, datica
 from const import TOTAL_BLOGS, PKL_EMO_MIDS
