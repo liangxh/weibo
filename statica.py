@@ -12,7 +12,9 @@ import cPickle
 import db, datica
 from const import TOTAL_BLOGS, PKL_EMO_MIDS
 from utils import progbar
+from utils import timer
 
+@timer()
 def collect_emo_mid():
 	print 'connecting to MySQL..'
 	con = db.connect()
@@ -40,7 +42,7 @@ def collect_emo_mid():
 
 	pbar.finish()
 
-	cPickle(emo_mids, PKL_EMO_MIDS)
+	cPickle.dump(emo_mids, PKL_EMO_MIDS)
 
 if __name__ == '__main__':
 	collect_emo_mid()
