@@ -1,38 +1,48 @@
-import matplotlib.pyplot as plt
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+'''
+Author: Xihao Liang
+Created: 2016.02.03
+Modified: 2016.02.03
+Description: create statistics report from mysql
+'''
 
-fobj = open('status_count.txt', 'r')
-content = fobj.read()
-fobj.close()
+import cPickle
 
-idhist = {}
-for item in content.split('\n'):
-	params = item.split(' ')
-	idhist[int(params[0])] = int(params[1])
+from share import db, datica
+from const import TOTAL_BLOGS, PKL_EMO_MIDS
+from utils import progbar
 
-print len(idhist.keys())
-phist = {}
-for v in idhist.values():
-	if phist.has_key(v):
-		phist[v] += 1
-	else:
-		phist[v] = 1
+def collect_emo_mid():
+	status_count = get_status_count()
+	con = db.connect()
+	cur = con.cursor()
+	cur.execute('SELECT uid, mid, text FROM users')
+	
+	pbar = progbar.start(TOTAL_BLOGS)
+	loop = 0
+	
+	emo_mids = {}
 
-plt.figure()
-plt.plot(phist.keys(), phist.values())
-plt.savefig('phist.png')
+	for mid, text in cur:
+		res = datica.extract(text)
+		if res == None:
+			continue
+		
+		text, emo = res
+		if emo_mids.has_key(emo):
+			emo_mids[emo].append(mid)
+		else:
+			emo_mids[emo] = [mid, ]
+	
+		loop += 1
+		pbar.update(loop)
 
-phist = sorted(phist.items(), key = lambda k:-k[1])
-vt = phist[0][0]
+	pbar.finish()
 
-print phist[0]
-print phist[1]
+	cPickle(emo_mids, PKL_EMO_MIDS)
 
-ids = []
-for k, v in idhist.items():
-	if v == vt:
-		ids.append(str(k))
+if __name__ == '__main__':
+	collect_emo_mid()
 
-print len(ids)
-fobj = open('ids.txt', 'w')
-fobj.write('\n'.join(ids))
-fobj.close()
+

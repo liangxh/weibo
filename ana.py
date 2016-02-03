@@ -1,9 +1,10 @@
 
 import cPickle
+import matplotlib.pyplot as plt
 
 from const import PKL_REPORT
 
-valid_hist, comm_hist, emo_tf, emo_df = cPickle.load(open(PKL_REPORT, 'r'))
+valid_hist, comm_hist, emo_tf, emo_df = cPickle.load(open('data/report.pkl', 'r'))
 
 total_valid = sum([k * v for k, v in valid_hist.items()])
 
@@ -26,3 +27,16 @@ for i, item in enumerate(emo_tf):
 	emo, count = item
 	print '%d. %s (%d / %d)'%(i + 1, emo, count, emo_df[emo])
 
+plt.figure()
+valid_items = sorted(valid_hist.items(), key = lambda k:k[0])
+x = [k for k, v in valid_items]
+y = [v for k, v in valid_items]
+plt.plot(x, y)
+plt.savefig('output/valid.png')
+
+plt.figure()
+comm_items = sorted(comm_hist.items(), key = lambda k:k[0])
+x = [k for k, v in comm_items]
+y = [v for k, v in comm_items]
+plt.plot(x, y)
+plt.savefig('output/comm.png') 

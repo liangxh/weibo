@@ -110,7 +110,6 @@ def sampling():
 	comm_hist = tohist(comm_list)
 
 	cPickle.dump((valid_hist, comm_hist, emo_tf, emo_df), open(PKL_REPORT, 'w'))
-	
 
 if __name__ == '__main__':
 	sampling()
