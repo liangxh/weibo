@@ -131,19 +131,48 @@ def read_eid_mids(eid):
 	return	mids
 
 @timer()
-def get_text(mids):
+def get_uids(mids):
 	import db
+
+	print 'connecting to mysql...'
 	con = db.connect()
 	cur = con.cursor()
 
-	cur.execute('SELECT text FROM microblogs where mid=' + ' or mid='.join(mids) + ' into outfile text.txt')		
+	mids = set(mids)
+	n_mids = len(mids)
+
+	print 'start getting %d text...'%(n_mids)
+	cur.execute('SELECT user_id, mid FROM microblogs WHERE mid in (%s)'%(','.join(mids)))
+
+	uids = {}
+	c = 0
+	for uid, mid in cur:
+		if not mid in mids:
+			continue 
+
+		if uids.has_key(mid):
+			print 'CRASH: ', mid
+		else:
+			uids[mid] = uid
+			c += 1
+			if c == n_mids:
+				break
 
 	cur.close()
 	con.close()
 
+	print '%0.2f%% (%d / %d) found'%(100.* c / n_mids, c, n_mids)
+
+	return uids
+
 def export_texts(eid):
+	if not os.path.exists(DIR_EID_MID_UID):
+		print '[Remind] mkdir %s'%(DIR_EID_MID_UID)
+
 	mids = read_eid_mids(eid)
-	get_text(mids)
+
+	uids = get_uids(mids)
+	cPickle.dump(uids, open(DIR_EID_MID_UID + '%d.pkl'%(eid), 'w'))
 
 if __name__ == '__main__':
 	#collect_emo_mids()

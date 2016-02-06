@@ -10,6 +10,7 @@ Description: stores const variables for sharing
 DIR_DATA = 'data/'
 DIR_OUTPUT = 'output/'
 DIR_EID_MIDS = DIR_DATA + 'eid_mids/'
+DIR_EID_MID_UID = DIR_DATA + 'eid_mid_uid/'
 
 TXT_EID = DIR_DATA + 'eid.txt'
 TXT_STATUS_COUNT = DIR_DATA + 'status_count.txt'
