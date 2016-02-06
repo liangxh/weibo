@@ -144,6 +144,7 @@ def get_uids(mids):
 	print 'start getting %d mid-uid pairs...'%(n_mids)
 	cur.execute('SELECT user_id, mid FROM microblogs WHERE mid in (%s)'%(','.join(mids)))
 
+	uids = {}
 	c = 0
 	for uid, mid in cur:
 		if not mid in mids:
