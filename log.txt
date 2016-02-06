@@ -1,0 +1,7 @@
+
+1. SELECT text FROM microblogs WHERE comments_count > 1
+2. 篩選出僅包含一種表情符且文字非空的微博
+3. 得出不同表情符對應的微博 mid (statica.collect_emo_mids > emo_mids.pkl)
+4. 统计出不同表情符的覆蓋率 (statica.analyse_emo_mids)
+5. 把emo_mids.pkl拆出子文件方便讀取 (statica.split_emo_mids > emo_mids/$EID.txt)
+6. 得出不用emo 對應的mids 各自對應的uids (statica.export_uids > eid_mid_uid/$EID.txt)
