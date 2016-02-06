@@ -9,7 +9,9 @@ Description: stores const variables for sharing
 
 DIR_DATA = 'data/'
 DIR_OUTPUT = 'output/'
+DIR_EID_MIDS = DIR_DATA + 'eid_mids/'
 
+TXT_EID = DIR_DATA + 'eid.txt'
 TXT_STATUS_COUNT = DIR_DATA + 'status_count.txt'
 PKL_REPORT = DIR_DATA + 'report.pkl'
 
@@ -24,6 +26,5 @@ STATUS_COUNT_2ND = 1098
 
 TOTAL_USERS = 1666637
 TOTAL_BLOGS = 156365006
-
 
 PKL_EMO_MIDS = DIR_DATA + 'emo_mids.pkl'

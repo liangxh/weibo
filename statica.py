@@ -8,17 +8,24 @@ Description: create statistics report from mysql
 '''
 
 import cPickle
+import os
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
+import matplotlib.pyplot as plt
 
-import db, datica
-from const import TOTAL_BLOGS, PKL_EMO_MIDS
-from utils import progbar
-from utils import timer
+import datica
+from const import TOTAL_BLOGS, PKL_EMO_MIDS, DIR_EID_MIDS, TXT_EID
+from utils import progbar, timer
 
 @timer()
-def collect_emo_mid():
+def collect_emo_mids():
+	'''
+	collect {emo: [mid, mid, ..], } from mysql and export to PKL_EMO_MIDS
+	'''
+
+	import db
+
 	print 'connecting to MySQL..'
 	con = db.connect()
 
@@ -46,8 +53,102 @@ def collect_emo_mid():
 	pbar.finish()
 
 	cPickle.dump(emo_mids, open(PKL_EMO_MIDS, 'w'))
+	
+	cur.close()
+	con.close()
+
+def analyse_emo_mids():
+	'''
+	show some statics about {emo: [mid, mid, ..], } from PKL_EMO_MIDS
+	'''
+
+	emo_mids = cPickle.load(open(PKL_EMO_MIDS, 'r'))
+
+	emo_count = {}
+	for k, v in emo_mids.items():
+		emo_count[k] = len(v)
+
+	n_blogs = sum(emo_count.values())	
+	emo_count = sorted(emo_count.items(), key = lambda k:-k[1])
+
+	coverage = []
+	last = 0.
+	for k, v in emo_count:
+		last += 100. * v / n_blogs
+		coverage.append(last)
+	
+	print '### Coverage: # of Emoticons ###'
+	th = [90., 95., 97., ]
+	th_id = 0
+	for i, c in enumerate(coverage):
+		if c > th[th_id]:
+			print '%0.2f: %d'%(th[th_id], i + 1)
+			th_id += 1
+			if th_id >= len(th):
+				break
+
+	plt.figure()
+	plt.xlabel('emoticons')
+	plt.ylabel('coverage (%)')
+	plt.plot(coverage)
+	plt.savefig('output/coverage_of_emoticons.png')
+
+def fname_eid_mids(eid):
+	return DIR_EID_MIDS + '%s.txt'%(eid)
+
+def split_emo_mids(n = 200):
+	'''
+	split PKL_EMO_MIDS to eid_mids/%d.txt of list of mids,  %d in [0, 199]
+	'''
+
+	emo_mids = cPickle.load(open(PKL_EMO_MIDS, 'r'))
+	
+	emo_count = {}
+	for k, v in emo_mids.items():
+		emo_count[k] = len(v)
+
+	emo_count = sorted(emo_count.items(), key = lambda k:-k[1])
+
+	open('eid.txt', 'w').write('\n'.join([k for k, v in emo_count[:n]]))
+
+	if not os.path.exists(DIR_EID_MIDS):
+		print 'Remind: mkdir data/eid_mids'
+	else:
+		for eid, item in enumerate(emo_count[:n]):
+			emo, count = item
+			mids = emo_mids[emo]
+			open(fname_eid_mids(eid), 'w').write('\n'.join(mids))
+
+def read_eid_mids(eid):
+	fname = fname_eid_mids(eid)
+
+	try:
+		mids = open(fname, 'r').read().split('\n')
+	except:
+		mids = None
+		print '[Warning] %s not found'%(fname)
+	
+	return	mids
+
+@timer()
+def get_text(mids):
+	import db
+	con = db.connect()
+	cur = con.cursor()
+
+	cur.execute('SELECT text FROM microblogs where mid=' + ' or mid='.join(mids) + ' into outfile text.txt')		
+
+	cur.close()
+	con.close()
+
+def export_texts(eid):
+	mids = read_eid_mids(eid)
+	get_text(mids)
 
 if __name__ == '__main__':
-	collect_emo_mid()
+	#collect_emo_mids()
+	#analyse_emo_mids()
+	#split_emo_mids()
 
+	export_texts(0)
 
