@@ -131,17 +131,12 @@ def read_eid_mids(eid):
 	return	mids
 
 @timer()
-def get_uids(mids):
-	import db
-
-	print 'connecting to mysql...'
-	con = db.connect()
+def get_uids(mids, con):	
 	cur = con.cursor()
 
 	mids = set(mids)
 	n_mids = len(mids)
 
-	print 'start getting %d mid-uid pairs...'%(n_mids)
 	cur.execute('SELECT user_id, mid FROM microblogs WHERE mid in (%s)'%(','.join(mids)))
 
 	uids = {}
@@ -159,25 +154,30 @@ def get_uids(mids):
 				break
 
 	cur.close()
-	con.close()
-
 	print '%0.2f%% (%d / %d) found'%(100.* c / n_mids, c, n_mids)
 
 	return uids
 
-def export_uids(eid):
+def export_uids(eids):
 	if not os.path.exists(DIR_EID_MID_UID):
 		print '[Remind] mkdir %s'%(DIR_EID_MID_UID)
 
-	mids = read_eid_mids(eid)
+	import db
+	con = db.connect()
 
-	uids = get_uids(mids)
-	cPickle.dump(uids, open(DIR_EID_MID_UID + '%d.pkl'%(eid), 'w'))
+	for eid in eids:
+		print '## EID: %d'%(eid)
+		mids = read_eid_mids(eid)
+
+		uids = get_uids(mids, con)
+		cPickle.dump(uids, open(DIR_EID_MID_UID + '%d.pkl'%(eid), 'w'))
+
+	con.close()
 
 if __name__ == '__main__':
 	#collect_emo_mids()
 	#analyse_emo_mids()
 	#split_emo_mids()
 
-	export_uids(0)
+	export_uids(range(200))
 
