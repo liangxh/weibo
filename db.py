@@ -20,7 +20,9 @@ def connect():
 		cur = con.cursor()
 		cur.execute('SET NAMES utf8')
 		con.commit()
+
 		return con
 	except db.Error, e:
 		print 'MySQL: [ERRNO %d] %s'%(e.args[0], e.args[1])
 		return None
+
