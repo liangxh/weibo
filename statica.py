@@ -15,7 +15,7 @@ sys.setdefaultencoding('utf8')
 import matplotlib.pyplot as plt
 
 import datica
-from const import TOTAL_BLOGS, PKL_EMO_MIDS, DIR_EID_MIDS, TXT_EID
+from const import TOTAL_BLOGS, PKL_EMO_MIDS, DIR_EID_MIDS, TXT_EID, DIR_EID_MID_UID
 from utils import progbar, timer
 
 @timer()
