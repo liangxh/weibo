@@ -46,7 +46,7 @@ def collect_emo_mids():
 			emo_mids[emo].append(mid)
 		else:
 			emo_mids[emo] = [mid, ]
-
+	
 		loop += 1
 		pbar.update(loop)
 
@@ -131,19 +131,43 @@ def read_eid_mids(eid):
 	return	mids
 
 @timer()
-def get_text(mids):
+def get_uids(mids):
 	import db
+
+	print 'connecting to mysql...'
 	con = db.connect()
 	cur = con.cursor()
 
-	cur.execute('SELECT text FROM microblogs where mid=' + ' or mid='.join(mids) + ' into outfile text.txt')		
+	mids = set(mids)
+	n_mids = len(mids)
+
+	print 'start getting %d text...'%(n_mids)
+	cur.execute('SELECT user_id, mid FROM microblogs WHERE mid in (%s)'%(','.join(mids)))
+
+	uids = {}
+	for uid, mid in cur:
+		if not mid in mids:
+			print mid
+			continue 
+
+		if uids.has_key(mid):
+			print 'CRASH: ', mid
+		else:
+			uids[mid] = uid
 
 	cur.close()
 	con.close()
 
+	print '%0.2f%% (%d / %d) found'%(100.*len(uids) / n_mids, len(uids), n_mids)
+
+	return uids
+
 def export_texts(eid):
+	print 'reading mids'
 	mids = read_eid_mids(eid)
-	get_text(mids)
+
+	uids = get_uids(mids)
+	open('data/uid1.txt', 'w').write('\n'.join(uids))
 
 if __name__ == '__main__':
 	#collect_emo_mids()
