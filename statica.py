@@ -141,7 +141,7 @@ def get_uids(mids):
 	mids = set(mids)
 	n_mids = len(mids)
 
-	print 'start getting %d text...'%(n_mids)
+	print 'start getting %d mid-uid pairs...'%(n_mids)
 	cur.execute('SELECT user_id, mid FROM microblogs WHERE mid in (%s)'%(','.join(mids)))
 
 	uids = {}
@@ -165,7 +165,7 @@ def get_uids(mids):
 
 	return uids
 
-def export_texts(eid):
+def export_uids(eid):
 	if not os.path.exists(DIR_EID_MID_UID):
 		print '[Remind] mkdir %s'%(DIR_EID_MID_UID)
 
@@ -179,5 +179,5 @@ if __name__ == '__main__':
 	#analyse_emo_mids()
 	#split_emo_mids()
 
-	export_texts(0)
+	export_uids(0)
 
