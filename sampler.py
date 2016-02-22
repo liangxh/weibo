@@ -105,7 +105,13 @@ def sample_text(eid):
 	
 	open('output/%d.txt'%(eid), 'w').write('\n'.join(texts))
 
-if __name__ == '__main__':
-	#analyse_mid_uid(0)
-	sample_text(0)
+if __name__ == '__main__':	
+	import sys
+	if len(sys.argv) < 2:
+		eid = 0
+	else:
+		eid = int(sys.argv[1])	
 
+	sample_text(eid)
+
+	#analyse_mid_uid(0)
