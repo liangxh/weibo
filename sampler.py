@@ -107,7 +107,7 @@ def sample_text(eid):
 			break
 
 	open('output/text_%d.txt'%(eid), 'w').write('\n'.join(texts))
-	open('output/mid_%d.txt'%(eid), 'w').write('\n'.join(str_mid_uid))
+	open('output/muid_%d.txt'%(eid), 'w').write('\n'.join(str_mid_uid))
 
 if __name__ == '__main__':	
 	import sys
