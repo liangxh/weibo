@@ -95,9 +95,13 @@ def sample_text(eid):
 			mids = mids[:100]
 		
 		for mid in mids:
-			cur.execute('SELECT text FROM user_id=%s AND mid=%s LIMIT 1'%(uid, mid))
+			cur.execute('SELECT text FROM microblogs WHERE user_id=%s AND mid=%s LIMIT 1'%(uid, mid))
 			text = cur.fetchone()[0]
 			texts.append(text)
+
+		c += len(mids)
+		if c >= target:
+			break
 	
 	open('output/%d.txt'%(eid), 'w').write('\n'.join(texts))
 
