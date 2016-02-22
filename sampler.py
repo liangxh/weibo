@@ -88,6 +88,8 @@ def sample_text(eid):
 	target = 4000
 
 	texts = []
+	str_mid_uid = []
+
 	for i, item in enumerate(uid_mids):
 		uid, mids = item
 		
@@ -98,12 +100,14 @@ def sample_text(eid):
 			cur.execute('SELECT text FROM microblogs WHERE user_id=%s AND mid=%s LIMIT 1'%(uid, mid))
 			text = cur.fetchone()[0]
 			texts.append(text)
+			str_mid_uid.append('%s %s'%(uid, mid))
 
 		c += len(mids)
 		if c >= target:
 			break
-	
-	open('output/%d.txt'%(eid), 'w').write('\n'.join(texts))
+
+	open('output/text_%d.txt'%(eid), 'w').write('\n'.join(texts))
+	open('output/mid_%d.txt'%(eid), 'w').write('\n'.join(str_mid_uid))
 
 if __name__ == '__main__':	
 	import sys
