@@ -112,7 +112,6 @@ if __name__ == '__main__':
 	else:
 		eid = int(sys.argv[1])	
 
-	print eid
 	sample_text(eid)
 
 	#analyse_mid_uid(0)
