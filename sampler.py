@@ -75,7 +75,7 @@ def analyse_mid_uid(eid):
 	print 'coverage: %0.2f%%'%(coverage)
 
 def sample_text(eid):
-	from share import blogger
+	import datica
 	import db
 	con = db.connect()
 	cur = con.cursor()
@@ -98,7 +98,7 @@ def sample_text(eid):
 		for mid in mids:
 			cur.execute('SELECT text FROM microblogs WHERE user_id=%s AND mid=%s LIMIT 1'%(uid, mid))
 			text = cur.fetchone()[0]
-			if not blogger.is_valid(text):
+			if not datica.is_valid(text):
 				continue
 
 			texts.append(text)
