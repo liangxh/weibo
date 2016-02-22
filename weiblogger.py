@@ -12,18 +12,25 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+pattern_korean = re.compile(u'[\u1100-\u11ff\u2e80-\u33ff\uac00-\ud7af\u3130–\u318f\u3200–\u32ff\ua960–\ua97f\ud7b0–\ud7ff\uff00–\uffef]+')
+
 def extract_main(blog):
 	text = remove_forward(blog)
 	text = remove_share(text)
 	text = remove_mention(text)
-	
+
+	text = remove_space(text)	
+
 	return text
 
-def clean_space(text):
+def remove_space(text):
 	text = text.strip()
 	text = re.sub('\s+', ' ', text)
 
 	return text
+
+def remove_korean(text):
+	return re.sub(pattern_korean, ' ', text)
 
 def remove_forward(blog):
 	return re.sub('//@.+$', '', blog, re.DOTALL)

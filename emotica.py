@@ -14,7 +14,7 @@ sys.setdefaultencoding('utf8')
 import re
 import json
 from utils import textcleaner
-from const import *
+from const import JSON_EMO
 
 class Emotica:
 	def __init__(self, fname_emo = JSON_EMO):
@@ -83,7 +83,7 @@ class Emotica:
 		return not m == None
 
 	def remove_emoticons(self, text):
-		return re.sub(self._pattern_emo, '', text)
+		return re.sub(self._pattern_emo, ' ', text)
 
 	def extract_emoticons(self, text):
 		return re.findall(self._pattern_emo, text)
@@ -162,7 +162,7 @@ if __name__ == '__main__':
 		for vi in v:
 			print '%s/%s'%(vi['phrase'], vi['value'])
 
-	t = u'你好[lxh開心] [lxh開心] 我是 [lxh開心] 梁錫豪'
+	t = u'你好[泪] [泪] 我是 [泪] 梁錫豪'
 	t = textcleaner.simplify_chinese(t)
 	print t
 	print db.has_emoticon(t)

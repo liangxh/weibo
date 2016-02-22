@@ -1,7 +1,20 @@
+# Research Log
+Xihao Liang, 2016.02.15
 
-1. SELECT text FROM microblogs WHERE comments_count > 1
-2. 篩選出僅包含一種表情符且文字非空的微博
-3. 得出不同表情符對應的微博 mid (statica.collect_emo_mids > emo_mids.pkl)
-4. 统计出不同表情符的覆蓋率 (statica.analyse_emo_mids)
-5. 把emo_mids.pkl拆出子文件方便讀取 (statica.split_emo_mids > emo_mids/$EID.txt)
-6. 得出不用emo 對應的mids 各自對應的uids (statica.export_uids > eid_mid_uid/$EID.txt)
+---
+
+## Procedure
+
+1. 篩選出僅包含一種表情符, 文字非空, 評論非空的微博, 得出不同表情符對應的微博 mid (statica.collect_emo_mids > emo_mids.pkl)
+2. 统计出不同表情符的覆蓋率 (statica.analyse_emo_mids)
+3. 把emo_mids.pkl拆出子文件方便讀取 (statica.split_emo_mids > emo_mids/$EID.txt)
+4. 得出不同emo 對應的mids 各自對應的uids (statica.export_uids > eid_mid_uid/$EID.txt)
+5. 分析不同eid 對應微博的uids 是否滿足最少由40人　每人100條微博構成 (sampler.analyse_mid_uid(eid) > stdout)
+6. 對不同eid 對應的微博篩選出4000條微博, 另外透過檢查樣例添加剔除規則 (如除去韓文在等1.中未實現) (sampler.sample_text(eid))
+*. 對樣本集進行分詞並保存 (zhprocessor.*)
+*. 實現基於occurrence matrix的詞向量訓練器 (concept.ConceptClassifier)
+*. 確定剔除規則, 具體獲得樣本集 (未確定)
+
+---
+
+Created on 2016.02.06

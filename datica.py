@@ -15,13 +15,6 @@ sys.setdefaultencoding('utf8')
 from share import blogger, emotica
 from utils import textcleaner
 
-def is_space(text):
-	'''
-	check if the text is composed of space
-	'''
-	m = re.match('^\s+$', text)
-	return not m == None
-
 def is_valid(blog):
 	'''
 	check if the blog 
@@ -35,20 +28,23 @@ def extract(blog):
 	return the text part and emoticon, otherwise None is returned.
 	'''
 
+	blog = blog.decode('utf8')
 	main_blog = blogger.extract_main(blog)
+	emoticons = emotica.extract_emoticons(main_blog)		
 
-	if is_space(main_blog):
+	if len(emoticons) == 0:
+		#print 'No Emoticons'
+		return None
+
+	text = emotica.remove_emoticons(main_blog)
+	text = blogger.remove_korean(text)
+	text = blogger.remove_space(text)
+
+	if len(text) == 0:
 		'''
 		no text content
 		'''
-		return None
-
-	emoticons = emotica.extract_emoticons(main_blog)
-	text = emotica.remove_emoticons(main_blog)
-	if len(emoticons) == 0 or is_space(text):
-		'''
-		no text content or no emoticon within this blog
-		'''
+		#print 'No text'
 		return None
 
 	phrases = [emotica.remove_prefix(emo) for emo in emoticons]
@@ -58,6 +54,7 @@ def extract(blog):
 		'''
 		more than one distinct emoticons within this blog
 		'''
+		#print 'Too many phrases'
 		return None
 
 	emo = emotica.remove_prefix(list(phrases)[0])
@@ -65,7 +62,7 @@ def extract(blog):
 	return text, emo
 
 if __name__ == '__main__':
-	t = u'四核旗舰对决 十款热门手机对比导购 http://t.cn/zWcJdvt  （分享自 @新浪科技） 有什么能取代我的大5230？[哈哈]'
+	t = u' @招商银行 对面的招商银行装修！！油漆味弥漫两天了，大热天关窗[泪][泪][泪]柳州柳钢支行...'
 	t = textcleaner.simplify_chinese(t)
 	res = extract(t)
 	if res == None:
@@ -73,4 +70,5 @@ if __name__ == '__main__':
 	else:
 		text, emo = res
 		print '%s|%s'%(text, emo)
+		print [text, ]
 

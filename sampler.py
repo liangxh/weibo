@@ -95,13 +95,24 @@ def sample_text(eid):
 			mids = mids[:100]
 		
 		for mid in mids:
-			cur.execute('SELECT text FROM user_id=%s AND mid=%s LIMIT 1'%(uid, mid))
+			cur.execute('SELECT text FROM microblogs WHERE user_id=%s AND mid=%s LIMIT 1'%(uid, mid))
 			text = cur.fetchone()[0]
 			texts.append(text)
+
+		c += len(mids)
+		if c >= target:
+			break
 	
 	open('output/%d.txt'%(eid), 'w').write('\n'.join(texts))
 
-if __name__ == '__main__':
-	#analyse_mid_uid(0)
-	sample_text(0)
+if __name__ == '__main__':	
+	import sys
+	if len(sys.argv) < 2:
+		eid = 0
+	else:
+		eid = int(sys.argv[1])	
 
+	print eid
+	sample_text(eid)
+
+	#analyse_mid_uid(0)

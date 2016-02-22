@@ -109,7 +109,7 @@ def split_emo_mids(n = 200):
 
 	emo_count = sorted(emo_count.items(), key = lambda k:-k[1])
 
-	open('eid.txt', 'w').write('\n'.join([k for k, v in emo_count[:n]]))
+	open('data/eid.txt', 'w').write('\n'.join([k for k, v in emo_count[:n]]))
 
 	if not os.path.exists(DIR_EID_MIDS):
 		print 'Remind: mkdir data/eid_mids'
