@@ -110,6 +110,8 @@ def sample_text(eid):
 		n_text += c
 		if n_text >= target:
 			break
+	
+	# n_text may not be equal to 4000, later correction - lxh
 
 	open('output/text_%d.txt'%(eid), 'w').write('\n'.join(texts))
 	open('output/muid_%d.txt'%(eid), 'w').write('\n'.join(str_mid_uid))

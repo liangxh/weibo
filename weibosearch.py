@@ -132,6 +132,9 @@ def request(url):
 		content = decompress(content)
 		return content
 	except urllib2.URLError, e:
+		print e.reason
+		return None
+	except urllib2.HTTPError, e:
 		print '[ERRNO %d] %s'%(e.code, e.reason)
 		return None
 
