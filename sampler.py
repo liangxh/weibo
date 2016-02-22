@@ -75,6 +75,7 @@ def analyse_mid_uid(eid):
 	print 'coverage: %0.2f%%'%(coverage)
 
 def sample_text(eid):
+	from share import blogger
 	import db
 	con = db.connect()
 	cur = con.cursor()
@@ -84,7 +85,7 @@ def sample_text(eid):
 	
 	uid_mids = sorted(umids.items(), key = lambda k: -len(k[1]))
 
-	c = 0
+	n_text = 0
 	target = 4000
 
 	texts = []
@@ -93,17 +94,21 @@ def sample_text(eid):
 	for i, item in enumerate(uid_mids):
 		uid, mids = item
 		
-		if len(mids) > 100:
-			mids = mids[:100]
-		
+		c = 0
 		for mid in mids:
 			cur.execute('SELECT text FROM microblogs WHERE user_id=%s AND mid=%s LIMIT 1'%(uid, mid))
 			text = cur.fetchone()[0]
-			texts.append(text)
-			str_mid_uid.append('%s %s'%(uid, mid))
+			if not blogger.is_valid(text):
+				continue
 
-		c += len(mids)
-		if c >= target:
+			texts.append(text)
+			str_mid_uid.append('%s %s'%(mid, uid))
+			c += 1
+			if c == 100:
+				break
+
+		n_text += c
+		if n_text >= target:
 			break
 
 	open('output/text_%d.txt'%(eid), 'w').write('\n'.join(texts))
