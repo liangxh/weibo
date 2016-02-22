@@ -20,6 +20,8 @@ from bs4 import BeautifulSoup
 from const import WEIBO_COOKIE, WEIBO_MYID
 from share import blogger
 
+RETCODE = 6102
+
 request_header = {
 	'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 	'Accept-Encoding':'gzip, deflate, sdch', 
@@ -93,6 +95,7 @@ def url_comment(uid, mid):
 		'comment_type':1,
 		'_t':0,
 		'__rnd':0,	#1453814722537
+		'retcode':RETCODE,
 	}
 
 	param = urllib.urlencode(params)
@@ -111,6 +114,7 @@ def url_comment_page(page, comm_id, max_id):
 		'max_id':max_id,
 		'page':page,
 		'__rnd':0, #1453883315616
+		'retcode':RETCODE,
 	}
 
 	param = urllib.urlencode(params)
@@ -175,9 +179,10 @@ def soup2ids(soup):
 	'''
 
 	uids = {}
-	usercards = soup.find(attrs={'usercard':re.compile('.*id=\d+.*')})
+	usercards = soup.findAll('a', attrs={'usercard':re.compile('.*id=\d+.*')})
+
 	for usercard in usercards:
-		uname = usercard.encode('utf8')
+		uname = usercard.text.decode('utf8')
 		if uids.has_key(uname):
 			continue
 
@@ -191,14 +196,14 @@ def soup2ids(soup):
 def add_emoticons_text(html):
 	'''
 	add title after <img> for each emoticon
-	otherwisw, soup.text will omit the emoticons
+	otherwise, soup.text will skip the emoticons
 	'''
 	return re.sub('<img[^>]*title="(?P<title>[^"]+)"[^>]*type="face"[^>]*>', '\g<title>', html)
 
 
 def get(uid, mid):
 	'''
-	short cut for get_comments
+	shortcut for get_comments
 	'''
 	return get_comments(uid, mid)
 
@@ -209,7 +214,18 @@ def get_comments(uid, mid):
 	if response == None:
 		return
 
-	res = json.loads(response)
+	try:
+		res = json.loads(response)
+	except ValueError:
+		m = re.search('location.replace\("([^"]+)"\)', response)
+		if m == None:
+			return
+		else:
+			print url
+			url = m.group(1)
+			print url
+			return
+
 	comments_count = res['data']['count']
 
 	html = res['data']['html']
@@ -260,8 +276,23 @@ def get_comments(uid, mid):
 			ids.update(soup2ids(soup))
 			comments.extend(soup2comments(soup))
 
+	cdata = []
 	for c in comments:
-		print 'FROM %s TO %s : %s'%(c['from_name'], c['to_name'], c['text'])
+		id2 = []
+		for name in [c['from_name'], c['to_name']]:
+			if name == None:
+				id2.append('-1')
+			elif not ids.has_key(name):
+				id2.append('0')
+			else:
+				id2.append(ids[name])
+
+		if c['to_name'] == None:
+			print '%s: %s'%(c['from_name'], c['text'])
+		else:
+			print '%s: RE@%s : %s'%(c['from_name'], c['to_name'], c['text'])
+
+		cdata.append([id2[0], id2[1], c['text']])
 
 	return comments
 
