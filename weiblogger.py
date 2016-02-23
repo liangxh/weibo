@@ -12,8 +12,8 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-import emotica
 import zhprocessor
+from share import emotica
 
 ################################### CONST ########################################
 
