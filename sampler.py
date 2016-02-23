@@ -115,7 +115,7 @@ def sample_text(eid):
 
 	if len(texts) > target:
 		texts = texts[:target]
-		str_mid_uid = texts[:target]
+		str_mid_uid = str_mid_uid[:target]
 
 	open('output/text_%d.txt'%(eid), 'w').write('\n'.join(texts))
 	open('output/muid_%d.txt'%(eid), 'w').write('\n'.join(str_mid_uid))
