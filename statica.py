@@ -14,7 +14,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 import matplotlib.pyplot as plt
 
-import datica
+from share import blogger
 from const import TOTAL_BLOGS, PKL_EMO_MIDS, DIR_EID_MIDS, TXT_EID, DIR_EID_MID_UID
 from utils import progbar, timer
 
@@ -37,7 +37,7 @@ def collect_emo_mids():
 	loop = 0
 	emo_mids = {}
 	for mid, text in cur:
-		res = datica.extract(text)
+		res = blogger.extract(text)
 		if res == None:
 			continue
 		
