@@ -104,6 +104,6 @@ if __name__ == '__main__':
 	else:
 		eid = int(sys.argv[1])	
 
-	sample_text(eid)
+	sample(eid)
 
 	#analyse_mid_uid(0)
