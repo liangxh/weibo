@@ -12,6 +12,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+import zhprocessor
 from share import blogger, emotica
 from utils import textcleaner
 
@@ -45,6 +46,13 @@ def extract(blog):
 		no text content
 		'''
 		#print 'No text'
+		return None
+
+	if not zhprocessor.contain_zh(text):
+		'''
+		no chinese character
+		'''
+		print text		
 		return None
 
 	phrases = [emotica.remove_prefix(emo) for emo in emoticons]
