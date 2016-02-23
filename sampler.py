@@ -113,6 +113,10 @@ def sample_text(eid):
 	
 	# n_text may not be equal to 4000, later correction - lxh
 
+	if len(texts) > target:
+		texts = texts[:target]
+		str_mid_uid = texts[:target]
+
 	open('output/text_%d.txt'%(eid), 'w').write('\n'.join(texts))
 	open('output/muid_%d.txt'%(eid), 'w').write('\n'.join(str_mid_uid))
 
