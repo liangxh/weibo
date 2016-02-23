@@ -105,7 +105,7 @@ def extract(blog):
 		#print 'No text'
 		return None
 
-	if not zhprocessor.contain_zh(text):
+	if not contain_zh(text):
 		'''
 		no chinese character
 		'''	
