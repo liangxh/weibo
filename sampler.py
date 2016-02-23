@@ -48,7 +48,7 @@ def sample(eid):
 	sampling text from MySQL to data/dataset/text/EID.txt and data/dataset/muid/EID.txt
 	'''
 
-	from share import blogger
+	import blogger
 	import db
 	con = db.connect()
 	cur = con.cursor()
