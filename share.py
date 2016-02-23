@@ -7,7 +7,5 @@ Modified: 2016.01.25
 Description: share tools among scripts
 '''
 
-import weiblogger
 from emotica import Emotica
-
 emotica = Emotica()
