@@ -5,6 +5,7 @@ import tarfile
 import sampler
 
 for i in range(100):
+	print 'sampling %d'%(i)
 	sampler.sample_text(i)
 
 tar = tarfile.open('output/tmp.tar', 'w')
