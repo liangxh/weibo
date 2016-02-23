@@ -10,5 +10,4 @@ Description: share tools among scripts
 import weiblogger
 from emotica import Emotica
 
-blogger = weiblogger
 emotica = Emotica()

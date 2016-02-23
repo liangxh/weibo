@@ -13,7 +13,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-from share import blogger
+import blogger
 from const import TOTAL_BLOGS, PKL_EMO_MIDS, DIR_EID_MIDS, TXT_EID, DIR_EID_UIDS
 
 def collect_emo_mids():
