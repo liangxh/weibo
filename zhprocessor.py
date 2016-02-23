@@ -43,6 +43,10 @@ def tokenize(text):
 
 	return tokens
 
+def contain_zh(text):
+	m = re.search('[%s]'%(re_zh), text)
+	return not m == None
+
 if __name__ == '__main__':
 	text = u'我爱北京天安门'
 
@@ -52,4 +56,6 @@ if __name__ == '__main__':
 	words = segment.cut(text, True)
 	for w in words:
 		print w.word, w.flag
+
+	print contain_zh('you ah')
 
