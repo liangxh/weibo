@@ -51,8 +51,7 @@ def extract(blog):
 	if not zhprocessor.contain_zh(text):
 		'''
 		no chinese character
-		'''
-		print text		
+		'''	
 		return None
 
 	phrases = [emotica.remove_prefix(emo) for emo in emoticons]
