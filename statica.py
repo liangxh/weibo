@@ -12,19 +12,17 @@ import os
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
-import matplotlib.pyplot as plt
 
 from share import blogger
-from const import TOTAL_BLOGS, PKL_EMO_MIDS, DIR_EID_MIDS, TXT_EID, DIR_EID_MID_UID
-from utils import progbar, timer
+from const import TOTAL_BLOGS, PKL_EMO_MIDS, DIR_EID_MIDS, TXT_EID, DIR_EID_UIDS
 
-@timer()
 def collect_emo_mids():
 	'''
 	collect {emo: [mid, mid, ..], } from mysql and export to PKL_EMO_MIDS
 	'''
 
 	import db
+	from utils import probgar
 
 	print 'connecting to MySQL..'
 	con = db.connect()
@@ -61,9 +59,9 @@ def analyse_emo_mids():
 	'''
 	show some statics about {emo: [mid, mid, ..], } from PKL_EMO_MIDS
 	'''
+	import matplotlib.pyplot as plt
 
 	emo_mids = cPickle.load(open(PKL_EMO_MIDS, 'r'))
-
 	emo_count = {}
 	for k, v in emo_mids.items():
 		emo_count[k] = len(v)
@@ -94,7 +92,7 @@ def analyse_emo_mids():
 	plt.savefig('output/coverage_of_emoticons.png')
 
 def fname_eid_mids(eid):
-	return DIR_EID_MIDS + '%s.txt'%(eid)
+	return DIR_EID_MIDS + '%d.txt'%(eid)
 
 def split_emo_mids(n = 200):
 	'''
@@ -130,8 +128,7 @@ def read_eid_mids(eid):
 	
 	return	mids
 
-@timer()
-def get_uids(mids, con):	
+def get_uids(mids, con):
 	cur = con.cursor()
 
 	mids = set(mids)
@@ -159,8 +156,12 @@ def get_uids(mids, con):
 	return uids
 
 def export_uids(eids):
-	if not os.path.exists(DIR_EID_MID_UID):
-		print '[Remind] mkdir %s'%(DIR_EID_MID_UID)
+	'''
+	export uids = {mid: uid, } -> uids[mid] = uid to respective DIR_EID_UIDS/EID.pkl
+	'''
+
+	if not os.path.exists(DIR_EID_UIDS):
+		print '[Remind] mkdir %s'%(DIR_EID_UIDS)
 
 	import db
 	con = db.connect()
@@ -170,7 +171,7 @@ def export_uids(eids):
 		mids = read_eid_mids(eid)
 
 		uids = get_uids(mids, con)
-		cPickle.dump(uids, open(DIR_EID_MID_UID + '%d.pkl'%(eid), 'w'))
+		cPickle.dump(uids, open(DIR_EID_UIDS + '%d.pkl'%(eid), 'w'))
 
 	con.close()
 
