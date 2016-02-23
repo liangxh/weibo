@@ -6,27 +6,32 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-if len(sys.argv) < 2:
-	eid = 0
-else:
-	eid = int(sys.argv[1])
+def tohist(ls):
+	hist = {}
+	for l in ls:
+		if hist.has_key(l):
+			hist[l] += 1
+		else:
+			hist[l] = 1
+	return hist
 
-import datica
-import zhprocessor as zhp
+def hist2str(hist):
+	return ', '.join(['%d (x%d)'%(k, v) for k, v in sorted(hist.items(), key = lambda k:-k[0])])
 
-fname = 'output/text_%d.txt'%(eid)
-lines = open(fname, 'r').read().split('\n')
+for i in range(100):
+	mids = {}
+	lines = open('output/muid/muid_%d.txt'%(i), 'r').read().split('\n')
+	for l in lines:
+		params = l.split(' ')
+		mid = params[0]
+		uid = params[1]
+		if mids.has_key(uid):
+			mids[uid].append(mid)
+		else:
+			mids[uid] = [mid, ]
 
-for l in lines:
-	res = datica.extract(l)
-	#if res == None:
-		#print l
-'''
+	n_mids = sorted([len(v) for v in mids.values()], reverse = True)
+	mhist = tohist(n_mids)
 
-from share import blogger
-text = u'ㅋㅋ아아!!종대최고!!!!![泪][泪][泪] //@________yoon:깜짝이야ㅋㅋㅋ 갑자기 왜 转发되나 했네ㅋㅋ 종대가 대표로 가위바위보해서 팬 네명 남을때 까지 해서 최후의 4인 했음ㅋㅋ //@李孛蓓三杯倒T-T:언니!!!!!!!!ㅜ대박!!!!![泪][泪][泪][泪][泪][泪][泪][泪][泪]부러웡..힝..ㅠㅠ'
-t = blogger.remove_korean(text)
-print t
-
-'''
-
+	print '%d. %d: '%(i, len(n_mids)), hist2str(mhist)
+	print 
