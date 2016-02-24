@@ -8,11 +8,21 @@ Xihao Liang, 2016.02.15
 1. 篩選出僅包含一種表情符, 文字非空, 評論非空的微博, 得出不同表情符對應的微博 mid (statica.collect_emo_mids > emo_mids.pkl)
 2. 统计出不同表情符的覆蓋率 (statica.analyse_emo_mids)
 3. 把emo_mids.pkl拆出子文件方便讀取 (statica.split_emo_mids > eid_mids/$EID.txt)
-4. 得出不同emo 對應的mids 各自對應的uids (statica.export_uids > eid_mid_uid/$EID.pkl)
+4. 得出不同emo 對應的mids 各自對應的uids (statica.export_uids > eid_uids/$EID.pkl)
 5. 對不同eid 對應的微博篩選出4000條微博, 另外透過檢查樣例添加剔除規則 (如除去韓文在等1.中未實現) (sampler.sample(eid))
-*. 對樣本集進行分詞並保存 (zhprocessor.*)
-*. 實現基於occurrence matrix的詞向量訓練器 (concept.ConceptClassifier)
-*. 確定剔除規則, 具體獲得樣本集 (未確定)
+6. 觀察用戶分布情況 (userdist.py)
+7. 為數據集建立字符編碼 ()
+8. 字符編碼-LSTM 運行
+9. 根據篩選出的數據集下載並保存評論
+10. 在數據庫中找出數據集中每條微博的上文(該作者的前數條微博)
+11. 檢查HowNet對數據集的覆蓋率
+*. 選擇詞表示方法
+*. 人工標注工具開發
+
+## Extra
+
+1. 對樣本集進行分詞 (zhprocessor.segment)
+2. 實現基於occurrence matrix的詞向量訓練器 (concept.ConceptClassifier)
 
 ---
 
