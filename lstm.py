@@ -259,9 +259,9 @@ class LstmClassifier:
 		end_time = time.time()
 
 		if best_p is not None:
-			zipp(best_p, tparams)
+			lstmtool.zipp(best_p, tparams)
 		else:
-			best_p = unzip(tparams)
+			best_p = lstmtool.unzip(tparams)
 
 		use_noise.set_value(0.)
 		
