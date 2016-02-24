@@ -22,7 +22,16 @@ JSON_EMO = DIR_DATA + 'emoticon.json'    # raw data parsed from URL_EMO
 
 DIR_OUTPUT = 'output/'
 
+DIR_DATASET = DIR_DATA + 'dataset/'
+DIR_TEXT = DIR_DATASET + 'text/'
+DIR_MUID = DIR_DATASET + 'muid/'
+
+PKL_TFCODER = DIR_DATASET + 'tfcoder.pkl'
+PKL_TFDATA = DIR_DATASET + 'tfdata.pkl'
+
 ################ CONST VARIABLE ##############################
+
+N_EMO = 90
 
 WEIBO_COOKIE = open(DIR_DATA + 'weibo_cookie.txt', 'r').read()
 WEIBO_MYID = '1784127181'

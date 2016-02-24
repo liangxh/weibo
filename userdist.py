@@ -1,6 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-
+'''
+Description: show statics about the distribution of users in the dataset
+'''
 
 import sys
 reload(sys)
@@ -20,7 +22,7 @@ def hist2str(hist):
 
 for i in range(100):
 	mids = {}
-	lines = open('output/muid/muid_%d.txt'%(i), 'r').read().split('\n')
+	lines = open('data/dataset/muid/%d.txt'%(i), 'r').read().split('\n')
 	for l in lines:
 		params = l.split(' ')
 		mid = params[0]
