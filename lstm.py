@@ -181,9 +181,9 @@ class LstmClassifier:
 				
 				kf = lstmtool.get_minibatches_idx(len(train[0]), batch_size, shuffle = True)
 				
-				for _, train_index in df:
+				for _, train_index in kf:
 					uidx += 1
-					use_noise_set_value(1.)
+					use_noise.set_value(1.)
 
 					x = [train[1][t] for t in train_index]
 					y = [train[0][t] for t in train_index]
