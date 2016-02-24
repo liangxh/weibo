@@ -46,7 +46,7 @@ def load(n_emo = N_EMO, valid_rate = 0.2, test_rate = 0.1):
 	'''
 
 	if not os.path.exists(PKL_TFDATA):
-		print 'unidatica.load: [Remind] please prepare() the dataset before trying to load() it'
+		print 'unidatica.load: [Remind] %s not found, please prepare() the dataset before trying to load() it'%(PKL_TFDATA)
 		return None
 
 	try:
