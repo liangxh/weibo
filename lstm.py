@@ -188,7 +188,7 @@ class LstmClassifier:
 					x = [train[1][t] for t in train_index]
 					y = [train[0][t] for t in train_index]
 
-					x, mask = self.prepared_x(x)
+					x, mask = self.prepare_x(x)
 					n_samples += x.shape[1]
 
 					cost = f_grad_shared(x, mask, y)
