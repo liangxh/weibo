@@ -39,7 +39,7 @@ def prepare():
 
 	cPickle.dump(datalist, open(PKL_TFDATA, 'w'))
 
-def load():
+def load(n_emo = N_EMO, valid_rate = 0.2, test_rate = 0.1):
 	'''
 	load data as [[codes, codes, ...], ...] from PKL_TFDATA
 	return None if something is wrong
@@ -50,7 +50,42 @@ def load():
 		return None
 
 	try:
-		return cPickle.load(open(PKL_TFDATA, 'r'))
+		datalist = cPickle.load(open(PKL_TFDATA, 'r'))
+
+		n_samples = len(datalist[0])
+		n_valid = int(valid_rate * n_samples)
+		n_test = int(test_rate * n_samples)
+		n_train = n_samples - n_valid - n_test
+
+		train_x = []
+		train_y = []
+		for i in xrange(n_train):
+			for eid in range(N_EMO):
+				train_x.append(datalist[eid][i])
+				train_y.append(eid)
+
+		train = (train_x, train_y)
+				
+		valid_x = []
+		valid_y = []
+		for i in xrange(n_train, n_train + n_valid):
+			for eid in range(N_EMO):
+				valid_x.append(datalist[eid][i])
+				valid_y.append(eid)
+
+		valid = (valid_x, valid_y)
+
+		test_x = []
+		test_y = []
+		for i in xrange(n_samples - n_test, n_samples):
+			for eid in range(N_EMO):
+				test_x.append(datalist[eid][i])
+				test_y.append(eid)
+		
+		test = (test_x, test_y)
+
+		return train, valid, test
+
 	except:
 		print 'unidatica.load: [Error] failed to load %s'%(PKL_TFDATA)
 		return None

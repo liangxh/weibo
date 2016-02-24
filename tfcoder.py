@@ -10,6 +10,8 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+import cPickle
+
 class TfCoder:
 	_n_code = None
 	_code = {}
@@ -80,7 +82,6 @@ class TfCoder:
 		return tokens
 
 def init(sample = None):
-	import cPickle
 	import blogger
 	from const import N_EMO, DIR_TEXT, PKL_TFCODER
 	from utils import progbar
@@ -118,6 +119,10 @@ def init(sample = None):
 	if not eflag:
 		print 'Info: coder created at %s'%(PKL_TFCODER)
 		print 'Info: n_code = %d'%(coder.n_code())
+
+def default_load():
+	from const import PKL_TFCODER
+	return cPickle.load(open(PKL_TFCODER, 'r'))
 
 if __name__ == '__main__':
 	text = u'husband, to live with you and laugh with you, to stand by your side, and sleep in your arms....哥们饶了我吧，我不素这种人，这真不是我的强项啊 [泪]'
