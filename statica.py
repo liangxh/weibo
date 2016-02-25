@@ -175,15 +175,6 @@ def export_uids(eids):
 
 	con.close()
 
-def load_uids(eids):
-	euids = {}
-
-	for eid in eids:
-		uids = cPickle.load(open(DIR_EID_UIDS + '%d.pkl'%(eid), 'r'))
-		euids[eid] = uids
-
-	return euids	
-
 if __name__ == '__main__':
 	#collect_emo_mids()
 	#analyse_emo_mids()

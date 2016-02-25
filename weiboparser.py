@@ -7,6 +7,10 @@ Modified: 2016.01.25
 Description: parse data from Weibo
 '''
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 import re
 import time
 import json
@@ -14,7 +18,9 @@ import traceback
 
 import urllib
 import urllib2
-urllib2.ProxyHandler({})
+
+null_proxy_handler = urllib2.ProxyHandler({})
+urlopener = urllib2.build_opener(null_proxy_handler)
 
 from bs4 import BeautifulSoup
 from const import WEIBO_COOKIE, WEIBO_MYID
@@ -126,7 +132,7 @@ def request(url):
 	req = urllib2.Request(url, headers = request_header)
 
 	try:
-		response = urllib2.urlopen(req)
+		response = urlopener.open(req)
 		content = response.read()
 
 		content_type = response.headers.get('content-type')
@@ -251,10 +257,14 @@ def get_comments(uid, mid, show_result = False):
 		more requests for pages required
 		'''
 
-		comment_label = soup.find('label', attrs={'for':re.compile('comm_\d+')})
+		'''comment_label = soup.find('label', attrs={'for':re.compile('comm_\d+')})
 		label_for = comment_label.get('for')
-		m = re.match('^comm_(\d+)$', label_for)
+		m = re.match('^[^_]+_(\d+)$', label_for)
 		comm_id = m.group(1)
+
+		print comm_id
+		print mid'''
+		comm_id = mid
 
 		first_comment = soup.find('div', attrs={'comment_id':re.compile('\d+')})
 		max_id = first_comment.get('comment_id')
@@ -274,6 +284,9 @@ def get_comments(uid, mid, show_result = False):
 			soup = BeautifulSoup(html, 'html.parser')
 			ids.update(soup2ids(soup))
 			comments.extend(soup2comments(soup))
+
+		if not len(comments) == comments_count:
+			print 'Weiboparser.get: [Error] %d / %d comments missing'%(comments_count - len(comments), comments_count)
 
 	if show_result:
 		#cdata = []
@@ -299,7 +312,7 @@ def get_comments(uid, mid, show_result = False):
 
 	return comments, ids
 
-
+'''
 def search(uid, start_time, key_word):
 	url = url_search(uid, start_time, key_word)
 	response = request(url)
@@ -338,15 +351,15 @@ def search(uid, start_time, key_word):
 		return None
 
 	return wb_text.text
-
+'''
 
 if __name__ == '__main__':
 	#uid = '1427605041'
 	#mid = '3523152740977956'
 	
-	uid = '1427605041'
-	mid = '3509858479270286'
+	#uid, mid = ('1427605041', '3509858479270286')
+	uid, mid = ('1448253167', '3493392086202628')
 
-	ret = get_comments(uid, mid)
+	ret = get_comments(uid, mid, show_result = True)
 
 	#comment_page(1)
