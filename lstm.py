@@ -221,7 +221,7 @@ class LstmClassifier:
 						if best_p is not None:
 							params = best_p
 						else:
-							params = unzip(tparams)
+							params = lstmtool.unzip(tparams)
 					
 						np.savez(fname_model, history_errs = history_errs, **params)
 						cPickle.dump(model_options, open('%s.pkl'%(fname_model), 'wb'), -1) # why -1??

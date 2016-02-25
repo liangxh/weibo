@@ -11,8 +11,9 @@ Xihao Liang, 2016.02.15
 4. 得出不同emo 對應的mids 各自對應的uids (statica.export_uids > eid_uids/$EID.pkl)
 5. 對不同eid 對應的微博篩選出4000條微博, 另外透過檢查樣例添加剔除規則 (如除去韓文在等1.中未實現) (sampler.sample(eid))
 6. 觀察用戶分布情況 (userdist.py)
-7. 為數據集建立字符編碼 ()
-8. 字符編碼-LSTM 運行
+7. 為數據集建立字符編碼 (tfcoder.init > dataset/tfcoder.pkl)
+8. 建立字符編碼組成的訓練數據 (unidatica.prepare > dataset/unidata.pkl)
+8. 字符編碼-LSTM 運行 (lstm.py)
 9. 根據篩選出的數據集下載並保存評論
 10. 在數據庫中找出數據集中每條微博的上文(該作者的前數條微博)
 11. 檢查HowNet對數據集的覆蓋率
