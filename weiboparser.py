@@ -253,7 +253,6 @@ def get_comments(uid, mid, show_result = False):
 		'''
 		all comments contained in this response
 		'''
-		print soup
 		ids = soup2ids(soup)
 		comments = soup2comments(soup)
 
