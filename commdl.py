@@ -29,7 +29,7 @@ def download_comments(eids, interval = 10):
 	euids = statica.load_uids(eids)
 	
 	if not os.path.exists(DIR_COMMENTS):
-		shutil.makedirs(DIR_COMMENTS)
+		shutil.mkdir(DIR_COMMENTS)
 
 
 	n_loop = sum([len(v.items()) for v in euids.values()])
