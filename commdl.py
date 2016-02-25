@@ -14,8 +14,9 @@ sys.setdefaultencoding('utf8')
 import shutil
 import time
 import json
+import traceback
 
-import statica
+import datica
 import weiboparser as wbparser
 
 from const import DIR_COMMENTS, N_EMO
@@ -24,7 +25,7 @@ from utils.logger import Logger
 logger = Logger()
 
 def download_comments(eids, interval = 10):
-	euids = statica.load_uids(eids)
+	euids = datica.load_euids(eids)
 	
 	if not os.path.exists(DIR_COMMENTS):
 		os.mkdir(DIR_COMMENTS)
@@ -40,34 +41,40 @@ def download_comments(eids, interval = 10):
 				downloaded_mid.add(json.loads(line)['mid'])
 			fobj.close()
 			logger.info('comments of %d blogs with EID = %d have already been downloaded'%(
-					len(downloaded_mid), meid)
+					len(downloaded_mid), eid)
 				)
 
 		fobj = open(fname, 'a')
 
-		n_loops = len(uids) - len(downloaded_mid)
+		n_loops = len(uids.items()) - len(downloaded_mid)
 		loop = 0
 
 		for mid, uid in uids.items():
-			start_time = time.time()
-
 			if not mid in downloaded_mid:
-				res = wbparser.get(uid, mid, show_result = True)
+				start_time = time.time()
+
+				try:
+					res = wbparser.get(uid, mid, show_result = True)
+				except:
+					logger.error('failed to save comments of (uid, mid) = (%s, %s) : %s'%(
+								uid, mid, traceback.format_exc()))
+					res = None
+
+				end_time = time.time()
+
 				if res == None:
-					logger.warning('failed to download comments of (uid, mid) = (%s, %s)'%(uid, mid))
+					logger.warning('failed to save comments of (uid, mid) = (%s, %s)'%(uid, mid))
 					missing.append((eid, mid, uid))
 				else:
 					comm, ids = res
 					fobj.write(json.dumps({'uid':uid, 'mid':mid, 'comm':comm, 'ids':ids}) + '\n')
-				loop += 1			
-
-			end_time = time.time()
-
-			logger.info('EID = %d, LOOP = %d / %d (%.1f sec)'%(loop, n_loops, end_time - start_time))
-			time.sleep(interval)
+				
+				loop += 1
+				logger.info('EID = %d, LOOP = %d / %d (%.1f sec)'%(eid, loop, n_loops, end_time - start_time))
+				time.sleep(interval)
+			
 			
 		fobj.close()
-		break
 	
 	fobj = open('missing_comm.txt', 'w')
 	for eid, mid, uid in missing:
