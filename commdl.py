@@ -48,7 +48,7 @@ def download_comments(eids, interval = 10):
 		for mid, uid in uids.items():
 			start_time = time.time()
 
-			if not mid in download_mid:
+			if not mid in downloaded_mid:
 				res = wbparser.get(uid, mid, show_result = True)
 				if res == None:
 					logger.warning('failed to download comments of (uid, mid) = (%s, %s)'%(uid, mid))
