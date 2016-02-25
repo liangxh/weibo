@@ -241,7 +241,7 @@ class LstmClassifier:
 
 						history_errs.append([valid_err, test_err])
 						if (uidx == 0 or valid_err <= np.array(history_errs)[:, 0].min()):
-							best_p = unzip(tparams)
+							best_p = lstmtool.unzip(tparams)
 							bad_count = 0
 						
 						logger.info('prediction error: train %f valid %f test %f'%(
