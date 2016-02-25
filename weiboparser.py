@@ -18,6 +18,7 @@ import traceback
 
 import urllib
 import urllib2
+import socket
 
 null_proxy_handler = urllib2.ProxyHandler({})
 urlopener = urllib2.build_opener(null_proxy_handler)
@@ -147,6 +148,9 @@ def request(url):
 	except urllib2.HTTPError, e:
 		print '[ERRNO %d] %s'%(e.code, e.reason)
 		return None
+	except socket.timeout, e:
+		print '[Timeout] %s'%(e.reason)
+		return None
 
 def soup2comments(soup):
 	'''
@@ -249,7 +253,7 @@ def get_comments(uid, mid, show_result = False):
 		'''
 		all comments contained in this response
 		'''
-
+		print soup
 		ids = soup2ids(soup)
 		comments = soup2comments(soup)
 
@@ -360,8 +364,9 @@ if __name__ == '__main__':
 	#mid = '3523152740977956'
 	
 	#uid, mid = ('1427605041', '3509858479270286')
-	uid, mid = ('1448253167', '3493392086202628')
+	#uid, mid = ('1448253167', '3493392086202628')
 
+	uid, mid = ('1694167544', '3506425500263895')
 	ret = get_comments(uid, mid, show_result = True)
 
 	#comment_page(1)
