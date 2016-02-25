@@ -53,28 +53,30 @@ def download_comments(eids, interval = 10):
 			if not mid in downloaded_mid:
 				start_time = time.time()
 
+				logger.info('downloading (uid, mid) = (%s, %s)'%(uid, mid))
 				try:
 					res = wbparser.get(uid, mid, show_result = True)
 				except KeyboardInterrupt:
 					break
 				except:
-					logger.error('failed to save comments of (uid, mid) = (%s, %s) : %s'%(
-								uid, mid, traceback.format_exc()))
+					logger.error('failed to save comments: %s'%(traceback.format_exc()))
 					res = None
 
 				end_time = time.time()
 
 				if res == None:
-					logger.warning('failed to save comments of (uid, mid) = (%s, %s)'%(uid, mid))
+					logger.info('EID = %d, LOOP = %d / %d failed (%.1f sec)'%(
+							eid, loop, n_loops, end_time - start_time
+						))
 					missing.append((eid, mid, uid))
 				else:
 					comm, ids = res
 					fobj.write(json.dumps({'uid':uid, 'mid':mid, 'comm':comm, 'ids':ids}) + '\n')
-				
+					logger.info('EID = %d, LOOP = %d / %d (%s %s) %d comments (%.1f sec)'%(
+							eid, loop, n_loops, uid, mid, len(comm), end_time - start_time
+						))
 				loop += 1
-				logger.info('EID = %d, LOOP = %d / %d (%s %s) (%.1f sec)'%(
-						eid, loop, n_loops, uid, mid, end_time - start_time
-					))
+				
 				time.sleep(interval)
 			
 			
