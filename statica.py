@@ -179,7 +179,7 @@ def load_uids(eids):
 	euids = {}
 
 	for eid in eids:
-		uids = cPickle.dump(uids, open(DIR_EID_UIDS + '%d.pkl'%(eid), 'w'))
+		uids = cPickle.load(open(DIR_EID_UIDS + '%d.pkl'%(eid), 'r'))
 		euids[eid] = uids
 
 	return euids	
