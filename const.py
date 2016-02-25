@@ -11,10 +11,11 @@ Description: stores const variables for sharing
 
 DIR_DATA = 'data/'
 
-PKL_EMO_MIDS = DIR_DATA + 'emo_mids.pkl' # store all {EMO: [MIDs, ], }
 DIR_EID_MIDS = DIR_DATA + 'eid_mids/'    # mids of the top 200 emoticons are stored in EID.txt 
 DIR_EID_UIDS = DIR_DATA + 'eid_uids/'    # uids of the blogs in eid_mids are stored as uids (e.g. uids[mid] = uid) in EID.txt
+DIR_COMMENTS = DIR_DATA + 'comments/'
 
+PKL_EMO_MIDS = DIR_DATA + 'emo_mids.pkl' # store all {EMO: [MIDs, ], }
 TXT_EID = DIR_DATA + 'eid.txt'           # phrases of emoticons are listed in the order of EID
 
 URL_EMO = 'http://weibo.com/aj/mblog/face?type=face&_wv=5&ajwvr=6&__rnd=1453464129146'

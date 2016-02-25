@@ -9,8 +9,9 @@ Description: Interface for Lstm
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
-
 import time
+import cPickle
+
 import theano
 import numpy as np
 
