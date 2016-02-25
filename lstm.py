@@ -52,7 +52,7 @@ class LstmClassifier:
 		return ps, pds
 
 	def classify(self, seqs, batch_size = 64):
-		if not instance(seqs[0], list):
+		if not isinstance(seqs[0], list):
 			seqs = [seqs, ]
 			preds, pred_probs = self.classify_batch(seqs)
 
@@ -72,6 +72,8 @@ class LstmClassifier:
 			return preds, pred_probs
 
 	######################## Training ##########################################
+
+	@classmethod
 	def prepare_x(self, seqs):
 		'''
 		create two 2D-Arrays (seqs and mask)
@@ -81,8 +83,8 @@ class LstmClassifier:
 		n_samples = len(seqs)
 		maxlen = np.max(lengths)
 
-		x = np.zeros((maxlen, n_samples))	#.astype('int64')
-		x_mask = np.zeros(maxlen, n_samples)	#.astype(theano.config.floatX)
+		x = np.zeros((maxlen, n_samples)).astype('int64')
+		x_mask = np.zeros((maxlen, n_samples)).astype(theano.config.floatX)
 
 		for idx, s in enumerate(seqs):
 			x[:lengths[idx], idx] = s
@@ -90,7 +92,8 @@ class LstmClassifier:
 		
 		return x, x_mask
 
-	def prepare_data(self, seqs, labels):
+	@classmethod
+	def prepare_data(self, seqs, labels, maxlen = None):
 		x, x_mask = self.prepare_x(seqs)
 		return x, x_mask, labels
 	
@@ -106,8 +109,8 @@ class LstmClassifier:
 		fname_model = FNAME_MODEL,
 		
 		# training params
-		validFreq = None, # 1000
-		saveFreq = None, #1000
+		validFreq = 1000,
+		saveFreq = 1000,
 		patience = 10,
 		max_epochs = 5000,
 		decay_c = 0.,
@@ -120,7 +123,6 @@ class LstmClassifier:
 		# debug params
 		dispFreq = 10,
 	):
-
 		train, valid, test = dataset
 
 		# building model
@@ -144,12 +146,17 @@ class LstmClassifier:
 
 		if decay_c > 0.:
 			decay_c = theano.shared(lstmtool.numpy_floatX(decay_c), name='decay_c')
-			cost += (tparams['U'] ** 2).sum() * decay_c
+			weight_decay = 0.
+			weight_decay += (tparams['U'] ** 2).sum()
+			weight_decay *= decay_c
+			cost += weight_decay
+			
+			#cost += (tparams['U'] ** 2).sum() * decay_c
 	
 		f_cost = theano.function([x, mask, y], cost, name = 'f_cost')
 		
 		grads = theano.tensor.grad(cost, wrt = tparams.values())
-		f_grad = theano.function([x, mask, y], grads, name = 'f_grads')
+		f_grad = theano.function([x, mask, y], grads, name = 'f_grad')
 
 		lr = theano.tensor.scalar(name = 'lr')
 		f_grad_shared, f_update = optimizer(lr, tparams, grads, x, mask, y, cost)
@@ -185,8 +192,8 @@ class LstmClassifier:
 					uidx += 1
 					use_noise.set_value(1.)
 
-					x = [train[1][t] for t in train_index]
-					y = [train[0][t] for t in train_index]
+					x = [train[0][t] for t in train_index]
+					y = [train[1][t] for t in train_index]
 
 					x, mask = self.prepare_x(x)
 					n_samples += x.shape[1]
@@ -299,6 +306,22 @@ def main():
 	import unidatica
 	dataset = unidatica.load(n_emo)
 
+	'''
+	train, valid, test = dataset
+	
+	kf = lstmtool.get_minibatches_idx(len(train[0]), 16, shuffle = True)
+				
+	for _, train_index in kf:
+		print train[0][train_index[0]]
+
+		x = [train[0][t] for t in train_index]
+		y = [train[1][t] for t in train_index]
+		x, mask = LstmClassifier.prepare_x(x)
+		print x
+		print mask
+
+		break
+	'''
 	lstm = LstmClassifier()
 	res = lstm.train(
 			dataset = dataset,
@@ -307,6 +330,7 @@ def main():
 			fname_model = FNAME_MODEL,
 			reload_model = False,
 		)
+	
 
 if __name__ == '__main__':
 	main()
