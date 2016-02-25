@@ -37,8 +37,11 @@ def download_comments(eids, interval = 10):
 		if os.path.exists(fname):
 			fobj = open(fname, 'r')
 			for line in fobj:
-				downloaded_mid.append(json.loads(line)['mid'])
+				downloaded_mid.add(json.loads(line)['mid'])
 			fobj.close()
+			logger.info('comments of %d blogs with EID = %d have already been downloaded'%(
+					len(downloaded_mid), meid)
+				)
 
 		fobj = open(fname, 'a')
 
