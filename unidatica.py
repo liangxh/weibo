@@ -60,7 +60,7 @@ def load(n_emo = N_EMO, valid_rate = 0.2, test_rate = 0.1):
 		train_x = []
 		train_y = []
 		for i in xrange(n_train):
-			for eid in range(N_EMO):
+			for eid in range(n_emo):
 				train_x.append(datalist[eid][i])
 				train_y.append(eid)
 
@@ -69,7 +69,7 @@ def load(n_emo = N_EMO, valid_rate = 0.2, test_rate = 0.1):
 		valid_x = []
 		valid_y = []
 		for i in xrange(n_train, n_train + n_valid):
-			for eid in range(N_EMO):
+			for eid in range(n_emo):
 				valid_x.append(datalist[eid][i])
 				valid_y.append(eid)
 
@@ -78,7 +78,7 @@ def load(n_emo = N_EMO, valid_rate = 0.2, test_rate = 0.1):
 		test_x = []
 		test_y = []
 		for i in xrange(n_samples - n_test, n_samples):
-			for eid in range(N_EMO):
+			for eid in range(n_emo):
 				test_x.append(datalist[eid][i])
 				test_y.append(eid)
 		
