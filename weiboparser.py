@@ -25,6 +25,7 @@ urlopener = urllib2.build_opener(null_proxy_handler)
 from bs4 import BeautifulSoup
 from const import WEIBO_COOKIE, WEIBO_MYID
 
+TIMEOUT = 10
 RETCODE = 6102
 
 request_header = {
@@ -132,7 +133,7 @@ def request(url):
 	req = urllib2.Request(url, headers = request_header)
 
 	try:
-		response = urlopener.open(req)
+		response = urlopener.open(req, timeout = TIMEOUT)
 		content = response.read()
 
 		content_type = response.headers.get('content-type')
@@ -206,13 +207,13 @@ def add_emoticons_text(html):
 	return re.sub('<img[^>]*title="(?P<title>[^"]+)"[^>]*type="face"[^>]*>', '\g<title>', html)
 
 
-def get(uid, mid, timeout = 10, show_result = False):
+def get(uid, mid, show_result = False):
 	'''
 	shortcut for get_comments
 	'''
-	return get_comments(uid, mid, timeout, show_result)
+	return get_comments(uid, mid, show_result)
 
-def get_comments(uid, mid, timeout = 10, show_result = False):
+def get_comments(uid, mid, show_result = False):
 	url = url_comment(uid, mid)
 	response = request(url)
 
