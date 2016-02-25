@@ -22,7 +22,16 @@ class Logger:
 	@staticmethod
 	def func_name(depth = 3):
 		res = inspect.stack()
-		return res[depth][0].f_locals['self'].__class__.__name__ + '.' + res[depth][3]
+		if res[depth][0].f_locals.has_key('self'):
+			'''
+			function of a class
+			'''
+			return res[depth][0].f_locals['self'].__class__.__name__ + '.' + res[depth][3]
+		else:
+			'''
+			function of a module 
+			'''
+			return res[depth][3]
 
 	def log(self, level, levelname, msg):
 		funcname = Logger.func_name()
