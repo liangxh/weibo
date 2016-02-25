@@ -206,13 +206,13 @@ def add_emoticons_text(html):
 	return re.sub('<img[^>]*title="(?P<title>[^"]+)"[^>]*type="face"[^>]*>', '\g<title>', html)
 
 
-def get(uid, mid, show_result = False):
+def get(uid, mid, timeout = 10, show_result = False):
 	'''
 	shortcut for get_comments
 	'''
-	return get_comments(uid, mid, show_result)
+	return get_comments(uid, mid, timeout, show_result)
 
-def get_comments(uid, mid, show_result = False):
+def get_comments(uid, mid, timeout = 10, show_result = False):
 	url = url_comment(uid, mid)
 	response = request(url)
 
