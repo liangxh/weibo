@@ -87,7 +87,7 @@ def download_comments(eids, interval = 10):
 		fobj.write('%d %s %s\n'%(eid, mid, uid))
 	fobj.close()
 
-def download_comment(eid, uid, mid)
+def download_comment(eid, uid, mid):
 	fname = DIR_COMMENTS + '%d.jsons'%(eid)
 	
 	if os.path.exists(fname):
