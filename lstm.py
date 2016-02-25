@@ -150,8 +150,6 @@ class LstmClassifier:
 			weight_decay += (tparams['U'] ** 2).sum()
 			weight_decay *= decay_c
 			cost += weight_decay
-			
-			#cost += (tparams['U'] ** 2).sum() * decay_c
 	
 		f_cost = theano.function([x, mask, y], cost, name = 'f_cost')
 		
@@ -201,18 +199,18 @@ class LstmClassifier:
 					cost = f_grad_shared(x, mask, y)
 					f_update(lrate)
 					
-					if np.isnan(cost) or numpy.isinf(cost):
+					if np.isnan(cost) or np.isinf(cost):
 						'''
 						NaN of Inf encountered
 						'''
 						logger.warning('NaN detected')
 						return 1., 1., 1.
 					
-					if np.mod(uidx, disFreq) == 0:
+					if np.mod(uidx, dispFreq) == 0:
 						'''
-						display progress at $disFreq
+						display progress at $dispFreq
 						'''
-						logger.info('Epoch %d Update %d Cost %f'%(eidx, uindx, cost))
+						logger.info('Epoch %d Update %d Cost %f'%(eidx, uidx, cost))
 
 					if np.mod(uidx, saveFreq) == 0:
 						'''
