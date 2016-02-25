@@ -16,7 +16,6 @@ import urllib
 import urllib2
 urllib2.ProxyHandler({})
 
-import blogger
 from bs4 import BeautifulSoup
 from const import WEIBO_COOKIE, WEIBO_MYID
 
