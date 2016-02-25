@@ -75,7 +75,7 @@ def download_comments(eids, interval = 10):
 					if len(comm) == 0:
 						logger.warning('EID = %d, LOOP = %d / %d, NO comments (%.1f sec)'%(
 								eid, loop, n_loops, len(comm), end_time - start_time
-							)
+							))
 					else:
 						fobj.write(json.dumps({'uid':uid, 'mid':mid, 'comm':comm, 'ids':ids}) + '\n')
 						logger.info('EID = %d, LOOP = %d / %d, %d comments (%.1f sec)'%(
