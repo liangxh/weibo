@@ -53,11 +53,11 @@ def download_comments(eids, interval = 10):
 			if not mid in downloaded_mid:
 				start_time = time.time()
 
-				logger.info('downloading (uid, mid) = (%s, %s)'%(uid, mid))
+				logger.info('downloading (eid, uid, mid) = (%d, %s, %s)'%(eid, uid, mid))
 				try:
 					res = wbparser.get(uid, mid, show_result = True)
 				except KeyboardInterrupt:
-					break
+					continue
 				except:
 					logger.error('failed to save comments: %s'%(traceback.format_exc()))
 					res = None
@@ -87,6 +87,53 @@ def download_comments(eids, interval = 10):
 		fobj.write('%d %s %s\n'%(eid, mid, uid))
 	fobj.close()
 
+def download_comment(eid, uid, mid)
+	fname = DIR_COMMENTS + '%d.jsons'%(eid)
+	
+	if os.path.exists(fname):
+		downloaded_mid = set()
+
+		fobj = open(fname, 'r')
+		for line in fobj:
+			downloaded_mid.add(json.loads(line)['mid'])
+		fobj.close()
+		logger.info('comments of %d blogs with EID = %d have already been downloaded'%(
+				len(downloaded_mid), eid)
+			)
+		
+		if mid in downloaded_mid:
+			logger.warning('comments of MID %s has been downloaded'%(mid))
+			return		
+
+	fobj = open(fname, 'a')
+
+	start_time = time.time()
+
+	logger.info('downloading (eid, uid, mid) = (%s, %s, %s)'%(eid, uid, mid))
+	try:
+		res = wbparser.get(uid, mid, show_result = True)
+	except KeyboardInterrupt:
+		pass
+	except:
+		logger.error('failed to save comments: %s'%(traceback.format_exc()))
+		res = None
+		end_time = time.time()
+
+		if res == None:
+			logger.info('EID = %d, LOOP = %d / %d failed (%.1f sec)'%(
+				eid, loop, n_loops, end_time - start_time
+				))
+			missing.append((eid, mid, uid))
+		else:
+			comm, ids = res
+			fobj.write(json.dumps({'uid':uid, 'mid':mid, 'comm':comm, 'ids':ids}) + '\n')
+			logger.info('EID = %d, LOOP = %d / %d (%s %s) %d comments (%.1f sec)'%(
+					eid, loop, n_loops, uid, mid, len(comm), end_time - start_time
+				))
+
+	fobj.close()
+
 if __name__ == '__main__':
 	download_comments(range(N_EMO))
+	
 
