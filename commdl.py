@@ -55,6 +55,8 @@ def download_comments(eids, interval = 10):
 
 				try:
 					res = wbparser.get(uid, mid, show_result = True)
+				except KeyboardInterrupt:
+					break
 				except:
 					logger.error('failed to save comments of (uid, mid) = (%s, %s) : %s'%(
 								uid, mid, traceback.format_exc()))
@@ -70,7 +72,9 @@ def download_comments(eids, interval = 10):
 					fobj.write(json.dumps({'uid':uid, 'mid':mid, 'comm':comm, 'ids':ids}) + '\n')
 				
 				loop += 1
-				logger.info('EID = %d, LOOP = %d / %d (%.1f sec)'%(eid, loop, n_loops, end_time - start_time))
+				logger.info('EID = %d, LOOP = %d / %d (%s %s) (%.1f sec)'%(
+						eid, loop, n_loops, uid, mid, end_time - start_time
+					))
 				time.sleep(interval)
 			
 			
