@@ -60,7 +60,7 @@ def download_comments(eids, interval = 10):
 
 			end_time = time.time()
 
-			logger.info('EID = %d, LOOP = %d / %d (%.1f sec)'%(loop, n_loop, end_time - start_time))
+			logger.info('EID = %d, LOOP = %d / %d (%.1f sec)'%(loop, n_loops, end_time - start_time))
 			time.sleep(interval)
 			
 		fobj.close()
