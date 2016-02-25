@@ -216,6 +216,7 @@ def get(uid, mid, show_result = False):
 def get_comments(uid, mid, show_result = False):
 	url = url_comment(uid, mid)
 	response = request(url)
+	print 'page opened'
 
 	if response == None:
 		return
