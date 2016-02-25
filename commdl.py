@@ -71,14 +71,18 @@ def download_comments(eids, interval = 10):
 					missing.append((eid, mid, uid))
 				else:
 					comm, ids = res
-					fobj.write(json.dumps({'uid':uid, 'mid':mid, 'comm':comm, 'ids':ids}) + '\n')
-					logger.info('EID = %d, LOOP = %d / %d (%s %s) %d comments (%.1f sec)'%(
-							eid, loop, n_loops, uid, mid, len(comm), end_time - start_time
-						))
+					
+					if len(comm) == 0:
+						logger.warning('EID = %d, LOOP = %d / %d, NO comments (%.1f sec)'%(
+								eid, loop, n_loops, len(comm), end_time - start_time
+							)
+					else:
+						fobj.write(json.dumps({'uid':uid, 'mid':mid, 'comm':comm, 'ids':ids}) + '\n')
+						logger.info('EID = %d, LOOP = %d / %d, %d comments (%.1f sec)'%(
+								eid, loop, n_loops, len(comm), end_time - start_time
+							))
 				loop += 1
-				
 				time.sleep(interval)
-			
 			
 		fobj.close()
 	
