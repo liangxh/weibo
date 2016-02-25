@@ -39,7 +39,7 @@ def download_comments(eids, interval = 10):
 
 	missing = []
 
-	for eid, uids in euids.items():
+	for eid, uids in sorted(euids.items(), key = lambda k:k[0]):
 		downloaded_mid = set()
 		fname = DIR_COMMENTS + '%d.jsons'%(eid)
 
