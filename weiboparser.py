@@ -200,11 +200,11 @@ def add_emoticons_text(html):
 	return re.sub('<img[^>]*title="(?P<title>[^"]+)"[^>]*type="face"[^>]*>', '\g<title>', html)
 
 
-def get(uid, mid):
+def get(uid, mid, show_result = False):
 	'''
 	shortcut for get_comments
 	'''
-	return get_comments(uid, mid)
+	return get_comments(uid, mid, show_result)
 
 def get_comments(uid, mid, show_result = False):
 	url = url_comment(uid, mid)
@@ -277,7 +277,7 @@ def get_comments(uid, mid, show_result = False):
 
 	if show_result:
 		#cdata = []
-		for c in comments:
+		for i, c in enumerate(comments):
 			id2 = []
 			for name in [c['from_name'], c['to_name']]:
 				if name == None:
@@ -287,10 +287,13 @@ def get_comments(uid, mid, show_result = False):
 				else:
 					id2.append(ids[name])
 
-			if c['to_name'] == None:
-				print '%s: %s'%(c['from_name'], c['text'])
-			else:
-				print '%s: RE@%s : %s'%(c['from_name'], c['to_name'], c['text'])
+			if i < 10:
+				if c['to_name'] == None:
+					print '%s: %s'%(c['from_name'], c['text'])
+				else:
+					print '%s: RE@%s : %s'%(c['from_name'], c['to_name'], c['text'])
+			elif i == 10:
+				print '...(%d in total)'%(len(comments))
 
 			#cdata.append([id2[0], id2[1], c['text']])
 
