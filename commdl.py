@@ -18,10 +18,8 @@ import json
 import statica
 import weiboparser as wbparser
 
-from utils import progbar
-from utils.logger import Logger
-
 from const import DIR_COMMENTS, N_EMO
+from utils.logger import Logger
 
 logger = Logger()
 
@@ -31,18 +29,12 @@ def download_comments(eids, interval = 10):
 	if not os.path.exists(DIR_COMMENTS):
 		os.mkdir(DIR_COMMENTS)
 
-	n_loop = sum([len(v.items()) for v in euids.values()])
-	
-	pbar = progbar.start(n_loop)	
-	loop = 0
-
 	missing = []
-
 	for eid, uids in sorted(euids.items(), key = lambda k:k[0]):
 		downloaded_mid = set()
 		fname = DIR_COMMENTS + '%d.jsons'%(eid)
 
-		if os.path.exists(DIR_COMMENTS):
+		if os.path.exists(fname):
 			fobj = open(fname, 'r')
 			for line in fobj:
 				downloaded_mid.append(json.loads(line)['mid'])
@@ -50,7 +42,12 @@ def download_comments(eids, interval = 10):
 
 		fobj = open(fname, 'a')
 
+		n_loops = len(uids) - len(downloaded_mid)
+		loop = 0
+
 		for mid, uid in uids.items():
+			start_time = time.time()
+
 			if not mid in download_mid:
 				res = wbparser.get(uid, mid, show_result = True)
 				if res == None:
@@ -59,14 +56,13 @@ def download_comments(eids, interval = 10):
 				else:
 					comm, ids = res
 					fobj.write(json.dumps({'uid':uid, 'mid':mid, 'comm':comm, 'ids':ids}) + '\n')
-			
-			loop += 1
-			pbar.update(loop)
+				loop += 1			
+
+			end_time = time.time()
+
+			logger.info('EID = %d, LOOP = %d / %d (%.1f sec)'%(loop, n_loop, end_time - start_time))
 			time.sleep(interval)
-		
-			if loop >= 2:
-				break;
-	
+			
 		fobj.close()
 		break
 	
