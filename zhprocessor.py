@@ -45,13 +45,17 @@ def tokenize(text):
 	return tokens
 
 if __name__ == '__main__':
-	text = u'我爱北京天安门'
+	text = u'还我八号风球！！！！八号风球挂了一个晚上，偏偏要上班的时候没有了！！！今天还要上班！！！噩耗！！！[泪][泪][泪]'
 
 	words = segment(text)
 	print '/'.join(words)
+	print
 
-	words = segment.cut(text, True)
-	for w in words:
-		print w.word, w.flag
-
+	words = segment(text, True)
+	print '/'.join(['%s(%s)'%(w.word, w.flag) for w in words])
+	print
+	
+	tokens = tokenize(text)
+	print '/'.join(tokens)
+	print
 
