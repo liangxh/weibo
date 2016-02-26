@@ -253,6 +253,7 @@ def get_comments(uid, mid, show_result = False):
 		'''
 		all comments contained in this response
 		'''
+		print 'A'
 		ids = soup2ids(soup)
 		comments = soup2comments(soup)
 
@@ -261,7 +262,7 @@ def get_comments(uid, mid, show_result = False):
 		comments are shown in severals pages
 		more requests for pages required
 		'''
-
+		
 		'''comment_label = soup.find('label', attrs={'for':re.compile('comm_\d+')})
 		label_for = comment_label.get('for')
 		m = re.match('^[^_]+_(\d+)$', label_for)
@@ -277,7 +278,9 @@ def get_comments(uid, mid, show_result = False):
 		#url_comment = cardmore.get('href') + '?type=comment'
 
 		page = 0
+		print comments_count
 		while (len(comments) < comments_count):
+			print page, len(comments)
 			page += 1
 			url = url_comment_page(page, comm_id, max_id)
 			response = request(url)
@@ -287,11 +290,17 @@ def get_comments(uid, mid, show_result = False):
 			html = add_emoticons_text(html)
 			
 			soup = BeautifulSoup(html, 'html.parser')
-			ids.update(soup2ids(soup))
-			comments.extend(soup2comments(soup))
+			comm = soup2comments(soup)
 
-		if not len(comments) == comments_count:
-			print 'Weiboparser.get: [Error] %d / %d comments missing'%(comments_count - len(comments), comments_count)
+			if len(comm) > 0:
+				comments.extend(comm)
+				ids.update(soup2ids(soup))
+			else:
+				'''
+				comments_count may be wrong as advertisement is omitted by Sina
+				just ignore it
+				'''
+				break
 
 	if show_result:
 		#cdata = []
@@ -364,8 +373,10 @@ if __name__ == '__main__':
 	
 	#uid, mid = ('1427605041', '3509858479270286')
 	#uid, mid = ('1448253167', '3493392086202628')
+	#uid, mid = ('1694167544', '3506425500263895')
 
-	uid, mid = ('1694167544', '3506425500263895')
+	uid, mid = ('1694167544', '3494407846506904')
+
 	ret = get_comments(uid, mid, show_result = True)
 
 	#comment_page(1)
