@@ -20,7 +20,7 @@ from utils.logger import Logger
 
 logger = Logger()
 
-FNAME_MODEL = 'lst_model.npz'
+FNAME_MODEL = 'data/lstm_model.npz'
 
 class LstmClassifier:
 	def __init__(self):
@@ -300,7 +300,7 @@ def main():
 	from const import PKL_TFCODER, N_EMO
 
 	coder = cPickle.load(open(PKL_TFCODER, 'r'))
-	n_emo = 2	
+	n_emo = N_EMO
 
 	import unidatica
 	dataset = unidatica.load(n_emo)
