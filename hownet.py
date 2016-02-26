@@ -11,8 +11,6 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-from datareader import *
-
 FOLDER_HOWNET = 'data/HowNet/'
 
 MARK = {'#', '%', '$', '*', '&', '~', '@', '?', '^', '!'}
