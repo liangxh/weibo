@@ -20,7 +20,7 @@ def prepare(eids = range(N_EMO)):
 	if not os.path.exists(DIR_TOKEN):
 		os.mkdir(DIR_TOKEN)
 
-	pbar = progbar.start(len(eids))
+	pbar = progbar.start(len(eids) * 4000)
 	c = 0
 	for eid in eids:
 		seqs = []
