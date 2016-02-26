@@ -14,24 +14,31 @@ import cPickle
 
 import zhprocessor as zhpr
 from const import DIR_TEXT, DIR_TOKEN, N_EMO
+from utils import progbar
 
-def prepare(eids = xrange(N_EMO)):
+def prepare(eids = range(N_EMO)):
 	if not os.path.exists(DIR_TOKEN):
 		os.mkdir(DIR_TOKEN)
 
+	pbar = progbar.start(len(eids))
+	c = 0
 	for eid in eids:
 		seqs = []
-		lines = open(DIR_TEXT + '%d.txt', 'r').read().split('\n')
+		lines = open(DIR_TEXT + '%d.txt'%(eid), 'r').read().split('\n')
 		for line in lines:
 			seqs.append(zhpr.tokenize(line))
+			c += 1
+			pbar.update(c)
 		
 		cPickle.dump(seqs, open(DIR_TOKEN + '%d.pkl', 'w'))
+
+	pbar.finish()
 
 def load(n_emo = N_EMO):
 	eseqs = []
 
 	for eid in xrange(n_emo):
-		fname = DIR_TOKEN + '%d.pkl'
+		fname = DIR_TOKEN + '%d.pkl'%(eid)
 		if not os.path.exists(fname):
 			print '[warning] %s not found'%(fname)
 			return None
