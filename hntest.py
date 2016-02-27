@@ -83,7 +83,11 @@ def test(n_emo = N_EMO):
 	save1('output/token_not_supported.txt', token_not_supported)
 
 	cPickle.dump(cover_dist, open('output/coverdist.pkl', 'w'))
-	
+
+
+def show_coverdist():
+	coverdist = cPickle.load(open('output/coverdist.pkl', 'r'))
+
 	plt.figure()
 	x = [float(b) / a  for a, b in cover_dist]
 	n, bins, patches = plt.hist(x, 50, normed = 1, alpha=0.75)
