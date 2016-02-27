@@ -11,13 +11,15 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 import cPickle
 
-import tokenprocessor as tokenpr
-from hownet import HowNet
+
 from const import N_EMO, DIR_TEXT, DIR_TOKEN
 from utils import progbar
 import matplotlib.pyplot as plt
 
 def test(n_emo = N_EMO):
+	import tokenprocessor as tokenpr
+	from hownet import HowNet
+
 	hownet = HowNet()
 
 	content_all = 0
@@ -31,7 +33,7 @@ def test(n_emo = N_EMO):
 
 	i = 0
 	token_not_supported = {}
-	cover_dist = []
+	coverdist = []
 
 	eseqs = tokenpr.load(n_emo)
 	for eid, seqs in enumerate(eseqs):
@@ -54,7 +56,7 @@ def test(n_emo = N_EMO):
 					else:
 						token_not_supported[token] = 1
 
-			cover_dist.append((len(seq), sup_len))
+			coverdist.append((len(seq), sup_len))
 
 			i += 1
 			pbar.update(i)
@@ -82,14 +84,14 @@ def test(n_emo = N_EMO):
 	save1('output/token_supported.txt', token_supported)
 	save1('output/token_not_supported.txt', token_not_supported)
 
-	cPickle.dump(cover_dist, open('output/coverdist.pkl', 'w'))
+	cPickle.dump(coverdist, open('output/coverdist.pkl', 'w'))
 
 
 def show_coverdist():
 	coverdist = cPickle.load(open('output/coverdist.pkl', 'r'))
 
 	plt.figure()
-	x = [float(b) / a  for a, b in cover_dist]
+	x = [float(b) / a  for a, b in coverdist]
 	n, bins, patches = plt.hist(x, 50, normed = 1, alpha=0.75)
 	
 	plt.title('Distribution of HowNet Coverage')
@@ -98,4 +100,5 @@ def show_coverdist():
 	plt.show()
 
 if __name__ == '__main__':
-	test(1)
+	test(n_emo)
+	#show_coverdist()
