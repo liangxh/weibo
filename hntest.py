@@ -73,7 +73,7 @@ def test(n_emo = N_EMO):
 
 	def save1(fname, tfhist):
 		fobj = open(fname, 'w')
-		for i, item in enumerate(sorted(tfhist.items(), key = lambda k:-k)):
+		for i, item in enumerate(sorted(tfhist.items(), key = lambda k:-k[1])):
 			t, tf = item
 			fobj.write('%d. %s (%d)\n'%(i + 1, t, tf))
 		fobj.close()
