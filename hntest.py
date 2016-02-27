@@ -33,8 +33,8 @@ def test(n_emo = N_EMO):
 	token_not_supported = {}
 	cover_dist = []
 
-	eseqs = tokenpr.load()
-	for eid, seqs in enumerate(eseqs[:n_emo]):
+	eseqs = tokenpr.load(n_emo)
+	for eid, seqs in enumerate(eseqs):
 		for seq in seqs:
 			content_all += len(seq)
 			
