@@ -15,7 +15,10 @@ Xihao Liang, 2016.02.15
 8. 建立字符編碼組成的訓練數據 (unidatica.prepare > dataset/unidata.pkl)
 8. 字符編碼-LSTM 運行 (lstm.py)
 9. 在數據庫中找出數據集中每條微博的上文(該作者的前數條微博) (lastblog.get / lastblog.exists)
-10. 檢查HowNet對數據集的覆蓋率
+10. 檢查HowNet對數據集的覆蓋率 (hntest. not finished)
+*. hownet對每一句的覆蓋率
+*. 未覆蓋詞檢查
+
 *. 根據篩選出的數據集下載並保存評論 (not done )
 	問題:
 	數據庫中comments_count > 1不一定能下載到評論 (微博被刪除或廣告評論被新浪自動刪除)
