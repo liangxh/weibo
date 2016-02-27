@@ -100,5 +100,5 @@ def show_coverdist():
 	plt.show()
 
 if __name__ == '__main__':
-	test(n_emo)
+	test()
 	#show_coverdist()
