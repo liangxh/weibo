@@ -3,7 +3,7 @@
 '''
 Author: Xihao Liang
 Created: 2016.02.26
-Description: tokenize all the text under data/dataset/text/EID.txt to data/dataset/token/EID.pkl
+Description: a script whichs tokenize all the text under data/dataset/text/EID.txt to data/dataset/token/EID.pkl
 '''
 
 import os

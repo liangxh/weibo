@@ -35,8 +35,8 @@ PKL_TFDATA = DIR_DATASET + 'tfdata.pkl'
 
 N_EMO = 90
 
-WEIBO_COOKIE = open(DIR_DATA + 'weibo_cookie.txt', 'r').read()
-WEIBO_MYID = '1784127181'
+#WEIBO_COOKIE = open(DIR_DATA + 'weibo_cookie.txt', 'r').read()
+#WEIBO_MYID = '1784127181'
 
 STATUS_COUNT_MAX = 1000
 STATUS_COUNT_2ND = 1098

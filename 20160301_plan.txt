@@ -1,0 +1,10 @@
+paragraph / discourse 加入上下文參與
+15年 一層一層訓練 逐步加入特征 DBN
+01双 / 李心星 神經網絡使用 autoencoder　多層
+
+
+
+1. 明天回實驗室看機器
+
+2. 先定autoencoder框架
+3. 再定加入特征
