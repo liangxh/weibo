@@ -35,12 +35,11 @@ class LstmClassifier:
 		fname_model = FNAME_MODEL, 
 	):
 		model_options = locals().copy()
-		params = lstmtool.init_tparams(model_options)
-		
+		params = lstmtool.init_params(model_options)
 		lstmtool.load_params(fname_model, params)	
 		tparams = lstmtool.init_tparams(params)
 
-		use_noise, x, mask, y, f_pred_prob, f_pred, cost = build_model(tparams, model_options)
+		use_noise, x, mask, y, f_pred_prob, f_pred, cost = lstmtool.build_model(tparams, model_options)
 
 		self.f_pred = f_pred
 		self.f_pred_prob = f_pred_prob
@@ -60,7 +59,7 @@ class LstmClassifier:
 			logger.warning('not examined yet, please check')
 			return preds[0], pred_probs[0]
 		else:
-			kf = lstmutil.get_minibatcches_idx(len(seqs), batch_size)
+			kf = lstmtool.get_minibatches_idx(len(seqs), batch_size)
 		
 			preds = []
 			pred_probs = []
@@ -140,6 +139,7 @@ class LstmClassifier:
 				return None
 		
 		tparams = lstmtool.init_tparams(params)
+		print ', '.join(tparams.keys())
 		use_noise, x, mask, y, f_pred_prob, f_pred, cost = lstmtool.build_model(tparams, model_options)
 
 		# preparing functions for training
@@ -300,10 +300,10 @@ def main():
 	from const import PKL_TFCODER, N_EMO
 
 	coder = cPickle.load(open(PKL_TFCODER, 'r'))
-	n_emo = N_EMO
+	n_emo = N_EMO # 2
 
 	import unidatica
-	dataset = unidatica.load(n_emo)
+	dataset = unidatica.load(n_emo) #, 1000
 
 	lstm = LstmClassifier()
 	res = lstm.train(

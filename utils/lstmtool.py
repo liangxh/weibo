@@ -107,10 +107,8 @@ def load_params(path, params):
     pp = numpy.load(path)
     for kk, vv in params.iteritems():
         if kk not in pp:
-            #raise Warning('%s is not in the archive' % kk)
-	    print '%s is not in the archive' % kk
-        else:
-            params[kk] = pp[kk]
+            raise Warning('%s is not in the archive' % kk)
+        params[kk] = pp[kk]
 
     return params
 

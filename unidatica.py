@@ -39,7 +39,7 @@ def prepare():
 
 	cPickle.dump(datalist, open(PKL_TFDATA, 'w'))
 
-def load(n_emo = N_EMO, valid_rate = 0.2, test_rate = 0.1):
+def load(n_emo = N_EMO, datalen = None, valid_rate = 0.2, test_rate = 0.1):
 	'''
 	load data as [[codes, codes, ...], ...] from PKL_TFDATA
 	return None if something is wrong
@@ -53,6 +53,10 @@ def load(n_emo = N_EMO, valid_rate = 0.2, test_rate = 0.1):
 		datalist = cPickle.load(open(PKL_TFDATA, 'r'))
 
 		n_samples = len(datalist[0])
+
+		if datalen is not None and n_samples > datalen:
+			n_samples = datalen
+
 		n_valid = int(valid_rate * n_samples)
 		n_test = int(test_rate * n_samples)
 		n_train = n_samples - n_valid - n_test
