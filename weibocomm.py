@@ -96,6 +96,8 @@ def soup2comments(soup):
 							'to_name':to_name,
 							'text':text})
 
+	comments.reverse()
+
 	return comments
 
 def soup2ids(soup):
@@ -126,7 +128,7 @@ def add_emoticons_text(html):
 	'''
 	return re.sub('<img[^>]*title="(?P<title>[^"]+)"[^>]*type="face"[^>]*>', '\g<title>', html)
 
-def get(urlopener, uid, mid, show_result = False):
+def get(urlopener, uid, mid, show_result = False, show_max = 10):
 	url = url_comment(uid, mid)
 	response = urlopener.urlopen(url)
 
@@ -181,6 +183,13 @@ def get(urlopener, uid, mid, show_result = False):
 			page += 1
 			url = url_comment_page(page, comm_id, max_id)
 			response = urlopener.urlopen(url)
+			
+			if response == None:
+				'''
+				unexpected error while parsing pages
+				'''
+				return None
+
 			ret = json.loads(response)
 
 			html = ret['data']['html']
@@ -200,10 +209,6 @@ def get(urlopener, uid, mid, show_result = False):
 				break
 
 	if show_result:
-		if len(comments) == 0:
-			print  'no comments'
-
-		#cdata = []
 		for i, c in enumerate(comments):
 			id2 = []
 			for name in [c['from_name'], c['to_name']]:
@@ -214,15 +219,13 @@ def get(urlopener, uid, mid, show_result = False):
 				else:
 					id2.append(ids[name])
 
-			if i < 10:
+			if i < show_max:
 				if c['to_name'] == None:
 					print '%s: %s'%(c['from_name'], c['text'])
 				else:
 					print '%s: RE@%s : %s'%(c['from_name'], c['to_name'], c['text'])
-			elif i == 10:
+			elif i == show_max:
 				print '...(%d in total)'%(len(comments))
-
-			#cdata.append([id2[0], id2[1], c['text']])
 
 	return comments, ids
 	

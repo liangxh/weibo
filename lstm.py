@@ -305,22 +305,6 @@ def main():
 	import unidatica
 	dataset = unidatica.load(n_emo)
 
-	'''
-	train, valid, test = dataset
-	
-	kf = lstmtool.get_minibatches_idx(len(train[0]), 16, shuffle = True)
-				
-	for _, train_index in kf:
-		print train[0][train_index[0]]
-
-		x = [train[0][t] for t in train_index]
-		y = [train[1][t] for t in train_index]
-		x, mask = LstmClassifier.prepare_x(x)
-		print x
-		print mask
-
-		break
-	'''
 	lstm = LstmClassifier()
 	res = lstm.train(
 			dataset = dataset,
@@ -329,8 +313,27 @@ def main():
 			fname_model = FNAME_MODEL,
 			reload_model = False,
 		)
-	
 
+def valid():
+	import cPickle
+	import tfcoder	
+	from const import PKL_TFCODER, N_EMO
+
+	coder = cPickle.load(open(PKL_TFCODER, 'r'))
+	n_emo = N_EMO
+
+	import unidatica
+	dataset = unidatica.load(n_emo)
+	lstm = LstmClassifier()
+	lstm.load(
+			ydim = n_emo,
+			n_words = coder.n_code(),
+		)
+
+	test_x, test_y = dataset[2]
+	preds, preds_prob = lstm.classify(test_x)
+	cPickle.dump((preds, preds_prob), open('output/pred_result.pkl', 'w'))
+	
 if __name__ == '__main__':
 	main()
 	pass

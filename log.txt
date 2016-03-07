@@ -15,18 +15,19 @@ Xihao Liang, 2016.02.15
 8. 建立字符編碼組成的訓練數據 (unidatica.prepare > dataset/unidata.pkl)
 8. 字符編碼-LSTM 運行 (lstm.py)
 9. 在數據庫中找出數據集中每條微博的上文(該作者的前數條微博) (lastblog.get / lastblog.exists)
-10. 檢查HowNet對數據集的覆蓋率 (hntest. not finished)
-*. hownet對每一句的覆蓋率
-*. 未覆蓋詞檢查
+10. 檢查HowNet對數據集的覆蓋率, hownet對每一句的覆蓋率 (hownettest.test)
+11. 未覆蓋詞檢查 (hownettestt.test)
+12. 篩選出足夠多評論的微博信息 (MYSQL select user_id, mid, text, comments_count from microblogs where comments_count >= 10 limit 400000 into outfile 'blogs_400000.txt')
+13. 從blogs_400000.txt 中根據blogger.extract() is not None篩選出blogs_subset.txt (commdatca.prepare)
+14. 分析blogs_400000.txt (commdatica.test)
+15. 觀察數據 (weiboparser.test_one)
+	1) 評論過多者經常出現廣告
+	2) 帶表情的微博一般有"質量較佳"的評論
+16. 測試多線程微博評論下載 (weibolauncher.test)
 
-*. 根據篩選出的數據集下載並保存評論 (not done )
-	問題:
-	數據庫中comments_count > 1不一定能下載到評論 (微博被刪除或廣告評論被新浪自動刪除)
+*. 各腳本的數據讀取函數load將统一移至datica.py
+*. 修改commdatica.py作為流程腳本或測試腳本
 
-12. 數據重篩選 (添加 有評論 和 有上文 兩個條件)
-	問題:
-	1) 可能出現EID > 80的數據收集達不到4000, 待測
-	2) 判断有無評論涉及爬蟲, 設計中断/继续機制
 
 *. 選擇詞表示方法
 *. 人工標注工具開發

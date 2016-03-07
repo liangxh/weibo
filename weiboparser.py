@@ -58,12 +58,12 @@ class WeiboParser(Thread):
 		self.account = account
 		self.urlopener.set_cookie(account.cookie)
 
-	def parse(self, uid, mid):
+	def parse(self, uid, mid, show_result = False, show_max = 1000):
 		if (self.account is None) or (self.urlopener.empty_cookie()):
 			print 'weiboparser.parse: [warning] please set_account() before parse()'
 			return None
 		
-		ret = weibocomm.get(self.urlopener, uid, mid, show_result = True)
+		ret = weibocomm.get(self.urlopener, uid, mid, show_result, show_max)
 		return ret
 
 	def set_comm_info(self, uid, mid):
@@ -90,10 +90,27 @@ def test():
 		parser.start()
 	return
 
+def test_one():
+	import random
+
+	#uid, mid = ('1427595804', '3521736785812544')
+	#uid, mid = ('1427590831 | 3447097976369049'.strip().split(' | '))	
+	uid, mid = ('2091963553	3525091176228878'.strip().split('\t'))
+
+	accounts = load_accounts()
+	ac = accounts[random.randint(0, len(accounts) - 1)]
+
+	ac.email
+	parser = WeiboParser()
+	parser.set_account(ac)
+	comm, ids = parser.parse(uid, mid, show_result = True, show_max = 2000)
+	print len(comm)
 
 if __name__ == '__main__':
 	#data = load()
 	#print len(data)
 	#print data[0]
-	test()
+
+	#test()
+	test_one()
 
