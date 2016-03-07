@@ -335,6 +335,6 @@ def valid():
 	cPickle.dump((preds, preds_prob), open('output/pred_result.pkl', 'w'))
 	
 if __name__ == '__main__':
-	main()
-	pass
+	#main()
+	valid()	
 
