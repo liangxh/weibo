@@ -35,7 +35,7 @@ class LstmClassifier:
 		fname_model = FNAME_MODEL, 
 	):
 		model_options = locals().copy()
-		params = lstmtool.init_tparams(params)
+		params = lstmtool.init_tparams(model_options)
 		
 		lstmtool.load_params(fname_model, params)	
 		tparams = lstmtool.init_tparams(params)
@@ -336,5 +336,5 @@ def valid():
 	
 if __name__ == '__main__':
 	#main()
-	valid()	
+	valid()
 
