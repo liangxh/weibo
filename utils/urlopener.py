@@ -81,7 +81,7 @@ class UrlOpener:
 			print '[ERRNO %d] %s'%(e.code, e.reason)
 			return None
 		except socket.timeout, e:
-			print '[Timeout] %s'%(e.reason)
+			print '[Timeout] ', e
 			return None
 
 def test():

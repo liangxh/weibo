@@ -46,10 +46,10 @@ class LstmClassifier:
 
 	def classify_batch(self, seqs):
 		x, x_mask = self.prepare_x(seqs)
-		ps = self.f_pred(x, x_mask)
+		#ps = self.f_pred(x, x_mask)
 		pds = self.f_pred_prob(x, x_mask)
 
-		return ps, pds
+		return pds
 
 	def classify(self, seqs, batch_size = 64):
 		if not isinstance(seqs[0], list):
@@ -61,15 +61,15 @@ class LstmClassifier:
 		else:
 			kf = lstmtool.get_minibatches_idx(len(seqs), batch_size)
 		
-			preds = []
+			#preds = []
 			pred_probs = []
 
 			for _, idx in kf:
 				ps, pds = self.classify_batch([seqs[i] for i in idx])	
-				preds.extend(ps)
+				#preds.extend(ps)
 				pred_probs.extend(pds)
 
-			return preds, pred_probs
+			return pred_probs
 
 	######################## Training ##########################################
 
@@ -331,9 +331,9 @@ def valid():
 		)
 
 	test_x, test_y = dataset[2]
-	preds, preds_prob = lstm.classify(test_x)
-	cPickle.dump((preds, preds_prob), open('output/pred_result.pkl', 'w'))
-	
+	preds_prob = lstm.classify(test_x)
+	cPickle.dump((test_y, preds_prob), open('output/pred_result.pkl', 'w'))
+
 if __name__ == '__main__':
 	#main()
 	valid()

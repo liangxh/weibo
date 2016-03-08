@@ -13,6 +13,10 @@ import math
 
 from utils import progbar
 
+FNAME_BLOGS_RAW = 'data/blogs/blogs_400000.txt'
+FNAME_BLOGS_FILTERED = 'data/blogs/blogs_filtered.txt'
+FNAME_BLOGS_SUBSET = 'data/blogs/blogs_subset_%d.txt'
+
 class BlogInfo:
 	def __init__(self, uid, mid, text, comments_count):
 		self.uid = uid
@@ -22,10 +26,6 @@ class BlogInfo:
 
 	def todict(self):
 		return {'uid':self.uid, 'mid':self.mid, 'text':self.text, 'comments_count':self.comments_count}
-
-FNAME_BLOGS_RAW = 'data/blogs/blogs_400000.txt'
-FNAME_BLOGS_FILTERED = 'data/blogs/blogs_filtered.txt'
-FNAME_BLOGS_SUBSET = 'data/blogs/blogs_subset_%d.txt'
 
 def prepare():
 	'''

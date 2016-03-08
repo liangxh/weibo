@@ -84,10 +84,10 @@ def soup2comments(soup):
 
 		m = re.match(u'^\s*([^：]+)：(.*)$', wb_text.text, re.DOTALL)
 		from_name = m.group(1)
-		text = m.group(2)
+		text = m.group(2).replace('：', ':')
 		to_name = None
 
-		m = re.match(u'回复@([^:]+):(.*)', text, re.DOTALL)
+		m = re.match(u'回复:?@([^:]+):(.*)\s+', text, re.DOTALL)
 		if m:
 			to_name = m.group(1).strip()
 			text = m.group(2).strip()
@@ -231,6 +231,9 @@ def get(urlopener, uid, mid, show_result = False, show_max = 10):
 	
 
 if __name__ == '__main__':
+	'''
+	# see weiboparser.test_one
+
 	#uid = '1427605041'
 	#mid = '3523152740977956'
 	
@@ -249,3 +252,6 @@ if __name__ == '__main__':
 		print 'failed'
 
 	#comment_page(1)
+	'''
+	pass
+	

@@ -9,7 +9,9 @@ import os
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
+from optparse import OptionParser
 
+import re
 import json
 import time
 import threading
@@ -24,7 +26,6 @@ from utils.logger import Logger
 logger = Logger(sys.stderr)
 
 JSONS_COMMENT = 'data/comments.txt'
-
 
 def load(fname = JSONS_COMMENT):
 	'''
@@ -157,7 +158,7 @@ class WeiboLauncher:
 
 		fail_count = 0
 
-		while flag:
+		while flag and not self.thread_interrupt:
 			#weibolauncher.thread_parse: 
 			logger.info('thread_%s downloading (%s %s)'%(
 					thread_name, bloginfo.uid, bloginfo.mid))
@@ -176,8 +177,12 @@ class WeiboLauncher:
 				blog['comments_count'] = len(comm)
 				blog['comments'] = comm
 				blog['ids'] = ids
-
-				self.outfile.write(json.dumps(blog) + '\n')
+			
+			if self.thread_interrupt:
+				logger.info('thread_%s interrupted'%(thread_name))
+				break
+			
+			self.outfile.write(json.dumps(blog) + '\n')
 
 			bloginfo = self.iter_bloginfo.next()
 			account = self.iter_account.next()
@@ -186,7 +191,6 @@ class WeiboLauncher:
 
 			if flag:
 				time.sleep(interval)
-	
 
 	def launch(self, n_instance):
 		'''
@@ -194,6 +198,8 @@ class WeiboLauncher:
 		accounts and bloginfo must be initialized by init_account and init_bloginfo in advance
 		'''
 
+		intr_lock = threading.Lock()
+		self.thread_interrupt = False
 		threads = []
 
 		for i in range(n_instance):
@@ -201,9 +207,17 @@ class WeiboLauncher:
 			thread.start()
 
 			threads.append(thread)
+		
+		try:
+			for thread in threads:
+				thread.join()
+		except KeyboardInterrupt:
+			self.thread_interrupt = True
+			print 'after keyboardinterrupt'
+
+			for thread in threads:
+				thread.join()
 			
-		for thread in threads:
-			thread.join()
 
 def test():
 	all_accounts = weiboparser.load_accounts()
@@ -217,17 +231,63 @@ def test():
 
 	bloginfo = filtered_bloginfo[:8]
 
-	main(accounts, bloginfo, 4)
+	launch(JSONS_COMMENT, accounts, bloginfo, 4)
 
 
-def main(accounts, bloginfo, n_instance):
+def launch(outfile, accounts, bloginfo, n_instance):
 	launcher = WeiboLauncher()
 	launcher.load_accounts(accounts)
 	launcher.load_bloginfo(bloginfo)
-	launcher.init_outfile(JSONS_COMMENT, 'a')
+	launcher.init_outfile(outfile, 'w')
 	launcher.launch(n_instance)
 	launcher.close_outfile()
 
+def main():
+	# get parameters from terminal
+	optparser = OptionParser()
+	optparser.add_option('-i', '--input', action = 'store', type = 'string', dest = 'infile')
+	optparser.add_option('-o', '--output', action = 'store', type = 'string', dest = 'outfile')
+	optparser.add_option('-a', '--account', action = 'store', type = 'string', dest = 'acc_range')
+	optparser.add_option('-n', '--instance', action = 'store', type = 'int', dest = 'n_instance', default = 5)
+
+	opts, args = optparser.parse_args()
+
+	if not opts.infile:
+		print '-i infile not specified'
+		return 
+
+	if not opts.outfile:
+		print '-o outfile not specified'
+		return
+
+	if not opts.acc_range:
+		print '-a (start_idx,end_idx) not specified'
+		return
+	else:
+		m = re.match('(\d+),(\d+)', opts.acc_range)
+		if not m:
+			print '-a start_idx,end_idx should contain no space'
+			return
+		else:
+			opts.acc_range = (int(m.group(1)), int(m.group(2)))
+
+	# prepare the accounts
+	all_accounts = weiboparser.load_accounts()
+	accounts = all_accounts[opts.acc_range[0]:opts.acc_range[1] + 1]
+
+	# prepare the 
+	all_bloginfo = commdatica.load(opts.infile)
+
+	# filter the blogs whose comments have been downloaded
+	mids = set(downloaded_mids())
+	bloginfos = [bloginfo for bloginfo in all_bloginfo if not bloginfo.mid in mids]
+
+	# for test
+	bloginfos = bloginfos[:20]
+
+	launch(opts.outfile, accounts, bloginfos, opts.n_instance)
+
 if __name__ == '__main__':
-	test()
+	#test()
+	main()
 

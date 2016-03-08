@@ -95,7 +95,7 @@ def test_one():
 
 	#uid, mid = ('1427595804', '3521736785812544')
 	#uid, mid = ('1427590831 | 3447097976369049'.strip().split(' | '))	
-	uid, mid = ('2091963553	3525091176228878'.strip().split('\t'))
+	uid, mid = ('1427616842	3521448876041091'.strip().split('\t'))
 
 	accounts = load_accounts()
 	ac = accounts[random.randint(0, len(accounts) - 1)]
