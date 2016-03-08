@@ -42,7 +42,7 @@ def analyse_result(ys, pred_probs):
 	rand_y = [float(xi) / n_dim for xi in rand_x]
 	plt.plot(rand_x, rand_y, '--r') 
 
-	plt.savefig('precision.png')
+	plt.savefig('output/precision.png')
 
 def test():
 	import cPickle
