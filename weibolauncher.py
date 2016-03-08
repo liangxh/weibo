@@ -27,6 +27,9 @@ JSONS_COMMENT = 'data/comments.txt'
 
 
 def load(fname = JSONS_COMMENT):
+	'''
+	load all the comments downloaded and saved in JSONS_COMMENT
+	'''
 
 	if not os.path.exists(fname):
 		return []
@@ -41,6 +44,11 @@ def load(fname = JSONS_COMMENT):
 	return comments
 
 def downloaded_mids():
+	'''
+	get the list of mids from JSONS_COMMENT
+	which are the mids of the blogs whose comments have been downloaded
+	'''
+
 	comments = load()
 
 	mids = [] if comments == [] else [comm['mid'] for comm in comments]
@@ -48,6 +56,10 @@ def downloaded_mids():
 	return mids
 
 class ListIterator:
+	'''
+	an iterator for multi-threading
+	'''
+
 	def __init__(self, data, iter_round = False):
 		self.data = data
 		self.datalen = len(data)
@@ -56,11 +68,6 @@ class ListIterator:
 
 		self.lock = threading.Lock()
 	
-		self.show = False
-
-	def set_show(self, show):
-		self.show = show
-
 	def restart(self):
 		self.lock.acquire()
 		self.idx = 0
@@ -84,6 +91,10 @@ class ListIterator:
 		return datum
 
 class SharedOutFile:
+	'''
+	a write file with threading lock though I don't know if it is necessary
+	'''
+
 	def __init__(self, fname, ftype = 'w'):
 		self.fobj = open(fname, ftype)
 		self.lock = threading.Lock()
@@ -97,24 +108,44 @@ class SharedOutFile:
 		self.fobj.close()
 
 class WeiboLauncher:
+	'''
+	a launcher for parsing weibo comments by multi-threading
+	'''
+
 	def __init__(self):
 		pass
 
 	def load_accounts(self, accounts):
+		'''
+		initialize a round iterator for accounts
+		'''
 		self.iter_account = ListIterator(accounts, iter_round = True)
 
 	def load_bloginfo(self, bloginfo):
+		'''
+		initialize a iterator for bloginfos
+		'''
 		self.iter_bloginfo = ListIterator(bloginfo)
-		self.iter_bloginfo.set_show(True)
 
 	def init_outfile(self, fname, ftype):
+		'''
+		initialize a output file object for threading
+		'''
 		self.outfile = SharedOutFile(fname, ftype)
 
 	def close_outfile(self):
+		'''
+		close the output file
+		'''
 		if self.outfile is not None:
 			self.outfile.close()
 
 	def thread_parse(self, interval = 5, thread_name = None):
+		'''
+		an instance for parseing weibo comments
+		which sleep for $interval seconds between every loop
+		'''
+
 		flag = True
 
 		wbparser = WeiboParser()
@@ -158,6 +189,11 @@ class WeiboLauncher:
 	
 
 	def launch(self, n_instance):
+		'''
+		parse weibo comments by $n_instance threads
+		accounts and bloginfo must be initialized by init_account and init_bloginfo in advance
+		'''
+
 		threads = []
 
 		for i in range(n_instance):
@@ -173,10 +209,13 @@ def test():
 	all_accounts = weiboparser.load_accounts()
 	accounts = all_accounts[:25]
 
-
+	all_bloginfo = commdatica.load()
+	
+	# do not download comments for the same blog again
 	mids = set(downloaded_mids())
-	all_bloginfo = [bloginfo for bloginfo in commdatica.load() if not bloginfo.mid in mids]
-	bloginfo = all_bloginfo[:8]
+	filtered_bloginfo = [bloginfo for bloginfo in all_bloginfo if not bloginfo.mid in mids]
+
+	bloginfo = filtered_bloginfo[:8]
 
 	main(accounts, bloginfo, 4)
 
@@ -185,7 +224,7 @@ def main(accounts, bloginfo, n_instance):
 	launcher = WeiboLauncher()
 	launcher.load_accounts(accounts)
 	launcher.load_bloginfo(bloginfo)
-	launcher.init_outfile(JSONS_COMMENT, 'w')
+	launcher.init_outfile(JSONS_COMMENT, 'a')
 	launcher.launch(n_instance)
 	launcher.close_outfile()
 

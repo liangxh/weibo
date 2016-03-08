@@ -9,6 +9,7 @@ Description: a script used to analyse umcomm.txt
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
+import math
 
 from utils import progbar
 
@@ -22,13 +23,14 @@ class BlogInfo:
 	def todict(self):
 		return {'uid':self.uid, 'mid':self.mid, 'text':self.text, 'comments_count':self.comments_count}
 
-FNAME_BLOGS_RAW = 'data/blogs_400000.txt'
-FNAME_BLOGS_FILTERED = 'data/blogs_subset.txt'  
+FNAME_BLOGS_RAW = 'data/blogs/blogs_400000.txt'
+FNAME_BLOGS_FILTERED = 'data/blogs/blogs_filtered.txt'
+FNAME_BLOGS_SUBSET = 'data/blogs/blogs_subset_%d.txt'
 
 def prepare():
 	'''
-	load data/blogs_400000.txt and after filtering by blogger.is_valid
-	those which pass are saved into data/blogs_subset.txt
+	load data/blogs/blogs_400000.txt and after filtering by blogger.is_valid
+	those which pass are saved into data/blogs/blogs_filtered.txt
 	'''
 
 	import blogger
@@ -63,15 +65,16 @@ def prepare():
 		fobj.write('%s\t%s\t%s\t%d\n'%(blog.uid, blog.mid, blog.text, blog.comments_count))
 	fobj.close()
 
-def load():
+def load(fname_blogs = FNAME_BLOGS_FILTERED):
 	'''
 	load data/blogs_subset.txt as list of BlogInfo
 	'''
 
-	lines = open(FNAME_BLOGS_FILTERED, 'r').readlines()
+	lines = open(fname_blogs, 'r').readlines()
 	blogs = []	
 
 	pbar = progbar.start(len(lines))
+
 	for i, l in enumerate(lines):
 		params = l[:-1].split('\t')
 		uid = params[0]
@@ -86,6 +89,25 @@ def load():
 
 	return blogs
 
+def split(n_part):
+	'''
+	split data/blogs_filtered.txt into data/blogs_subset_ID.txt
+	'''
+
+	lines = open(FNAME_BLOGS_FILTERED, 'r').readlines()
+	n_lines = len(lines)
+	batch_size = int(math.ceil(float(n_lines) / n_part))
+	
+	count_lines = 0
+
+	for i in range(n_part):
+		fname = FNAME_BLOGS_SUBSET % (i)
+		fobj = open(fname, 'w')
+		fobj.write(''.join(lines[count_lines:min(count_lines + batch_size, n_lines)]))
+		fobj.close()
+
+		count_lines += batch_size
+	
 def tohist(ls):
 	hist = {}
 	for l in ls:
@@ -95,7 +117,7 @@ def tohist(ls):
 			hist[l] = 1
 	return hist
 
-def test():
+def analyse():
 	import matplotlib.pyplot as plt
 
 	blogs = load()
@@ -134,4 +156,6 @@ def test():
 	plt.savefig('output/new_cdist.png')
 
 if __name__ == '__main__':
-	test()
+	#analyse()
+	split(4)
+

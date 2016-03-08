@@ -19,7 +19,7 @@ Xihao Liang, 2016.02.15
 11. 未覆蓋詞檢查 (hownettestt.test)
 12. 篩選出足夠多評論的微博信息 (MYSQL select user_id, mid, text, comments_count from microblogs where comments_count >= 10 limit 400000 into outfile 'blogs_400000.txt')
 13. 從blogs_400000.txt 中根據blogger.extract() is not None篩選出blogs_subset.txt (commdatca.prepare)
-14. 分析blogs_400000.txt (commdatica.test)
+14. 分析blogs_400000.txt (commdatica.analyse)
 15. 觀察數據 (weiboparser.test_one)
 	1) 評論過多者經常出現廣告
 	2) 帶表情的微博一般有"質量較佳"的評論
