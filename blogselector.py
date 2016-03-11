@@ -50,10 +50,17 @@ def select():
 	# t for threshold_max
 	unt = [(u, n, m + v) for u, n, m, v in unmv if m <= 50 and v <= 100]
 	umtc = []
-	for u, n, thr_max in unt:
+	for u, n, thr_max in unt[:4000]:
 		cur.execute('select mid, text, comments_count from microblogs where user_id = %s and comments_count >= %d and comments_count <= %d limit %d'%(u, thr_min, thr_max, n))
+
+		tmp_umtc = []
 		for m, t, c in cur:
-			umtc.append((u, m, t, c))
+			tmp_umtc.append((u, m, t, c))
+
+		tmp_umtc = sorted(tmp_umtc, key = lambda k: -k[3])
+		if len(tmp_umtc) > 100:
+			tmp_umtc = tmp_umtc[:100]
+		umtc.extend(tmp_umtc)
 
 	print len(umtc)
 	cPickle.dump(umtc, open('output/umtc.pkl', 'w'))
