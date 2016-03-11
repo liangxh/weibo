@@ -31,9 +31,10 @@ Xihao Liang, 2016.02.15
 
 20. 選擇詞表示方法
 	1) 字符編碼
-	2) matrix factorization (SVD)
-	3) denoise autocoder
-	4) word2vec
+	2) 隨機詞向量 (原lstm.py中param['Wemb'])
+	3) matrix factorization (SVD)
+	4) denoise autocoder
+	5) word2vec
 
 
 ## NEXT
@@ -45,7 +46,7 @@ Xihao Liang, 2016.02.15
 	4) 決定下載更多或開始整理
 
 2. 特征提取
-	1) 基於第一批數據完成 20. 中4種詞表示方法的代碼
+	1) 基於第一批數據完成 20. 中5種詞表示方法的代碼
 	2) 編寫腳本結合lstm 和特征提取的代碼
 	3) 運行4個程式
 
