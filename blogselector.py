@@ -51,7 +51,7 @@ def select():
 	unt = [(u, n, m + v) for u, n, m, v in unmv if m <= 50 and v <= 100]
 	umtc = []
 	for u, n, thr_max in unt:
-		cur.execute('select mid, text, comments_count from microblogs where microblogs where user_id = %s and comments_count >= %d and comments_count <= %d'%(u, thr_min, thr_max))
+		cur.execute('select mid, text, comments_count from microblogs where user_id = %s and comments_count >= %d and comments_count <= %d limit %d'%(u, thr_min, thr_max, n))
 		for m, t, c in cur:
 			umtc.append((u, m, t, c))
 
@@ -59,5 +59,5 @@ def select():
 	cPickle.dump(umtc, open('output/umtc.pkl', 'w'))
 
 if __name__ == '__main__':
-	export_unmv()
+	#export_unmv()
 	select()
