@@ -180,6 +180,7 @@ def get(urlopener, uid, mid, show_result = False, show_max = 10):
 
 		page = 0
 		while (len(comments) < comments_count):
+			#print page, len(comments)
 			page += 1
 			url = url_comment_page(page, comm_id, max_id)
 			response = urlopener.urlopen(url)

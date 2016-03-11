@@ -89,10 +89,9 @@ def init_params(options):
     """
     params = OrderedDict()
     # embedding
-    #randn = numpy.random.rand(options['n_words'],
-    #                          options['dim_proj'])
-    #params['Wemb'] = (0.01 * randn).astype(config.floatX)
-    params['Wemb'] = numpy.asarray([[i, 0] for i in range(options['n_words'])]).astype(config.floatX)
+    randn = numpy.random.rand(options['n_words'],
+                              options['dim_proj'])
+    params['Wemb'] = (0.01 * randn).astype(config.floatX)
     params = get_layer(options['encoder'])[0](options,
                                               params,
                                               prefix=options['encoder'])
@@ -443,4 +442,12 @@ def pred_error(f_pred, prepare_data, data, iterator, verbose=False):
 
 if __name__ == '__main__':
     None
+
+
+
+
+
+
+
+
 

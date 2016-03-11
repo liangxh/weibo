@@ -25,11 +25,34 @@ Xihao Liang, 2016.02.15
 	2) 帶表情的微博一般有"質量較佳"的評論
 16. 測試多線程微博評論下載 (weibolauncher.test)
 
+17. lstm代碼修改完成 (lstm.main > data/lstm_model.npz, lstm_model.npz.pkl)
+18. lstm測試結果生成 (lstm.valid > output/lstm_result.pkl)
+19. lstm測試結果分析 (lstmreporter.test)
+
+20. 選擇詞表示方法
+	1) 字符編碼
+	2) matrix factorization (SVD)
+	3) denoise autocoder
+	4) word2vec
+
+
+## NEXT
+
+1. 數據收集
+	1) 選定40,000 ~ 100,000條微博
+	2) 部署到3台機器上運行
+	3) 分析數據質量
+	4) 決定下載更多或開始整理
+
+2. 特征提取
+	1) 基於第一批數據完成 20. 中4種詞表示方法的代碼
+	2) 編寫腳本結合lstm 和特征提取的代碼
+	3) 運行4個程式
+
+## LATER
+
 *. 各腳本的數據讀取函數load將统一移至datica.py
 *. 修改commdatica.py作為流程腳本或測試腳本
-
-
-*. 選擇詞表示方法
 *. 人工標注工具開發
 
 ## Extra

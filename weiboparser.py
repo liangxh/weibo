@@ -94,11 +94,18 @@ def test_one():
 	import random
 
 	#uid, mid = ('1427595804', '3521736785812544')
-	#uid, mid = ('1427590831 | 3447097976369049'.strip().split(' | '))	
-	uid, mid = ('1427616842	3521448876041091'.strip().split('\t'))
+	uid, mid = ('1427816602 | 3436166978041857'.strip().split(' | '))	
+	#uid, mid = ('1427616842	3521448876041091'.strip().split('\t'))
 
 	accounts = load_accounts()
 	ac = accounts[random.randint(0, len(accounts) - 1)]
+
+	print 'user_id: %s'%(uid)
+	print 'mid: %s'%(mid)
+	print 'text: '
+	print
+	print 'comments_count (in MySL): '
+	print
 
 	ac.email
 	parser = WeiboParser()
