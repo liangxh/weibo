@@ -283,7 +283,7 @@ def main():
 	bloginfos = [bloginfo for bloginfo in all_bloginfo if not bloginfo.mid in mids]
 
 	# for test
-	bloginfos = bloginfos[:20]
+	# bloginfos = bloginfos[:20]
 
 	launch(opts.outfile, accounts, bloginfos, opts.n_instance)
 
