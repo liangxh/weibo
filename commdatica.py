@@ -18,7 +18,7 @@ FNAME_BLOGS_FILTERED = 'data/blogs/blogs_filtered.txt'
 FNAME_BLOGS_SUBSET = 'data/blogs/blogs_subset_%d.txt'
 
 class BlogInfo:
-	def __init__(self, uid, mid, text, comments_count):
+	def __init__(self, uid = None, mid = None, text = None, comments_count = None):
 		self.uid = uid
 		self.mid = mid
 		self.text = text
@@ -26,6 +26,16 @@ class BlogInfo:
 
 	def todict(self):
 		return {'uid':self.uid, 'mid':self.mid, 'text':self.text, 'comments_count':self.comments_count}
+
+	@staticmethod
+	def loads(line):
+		params = line.strip().split('\t')
+		blog = BlogInfo(params[0], params[1], params[2], int(params[3]))
+
+		return blog
+
+	def __repr__(self):
+		return '%s\t%s\t%s\t%d'%(self.uid, self.mid, self.text, self.comments_count)
 
 def prepare():
 	'''
@@ -76,12 +86,7 @@ def load(fname_blogs = FNAME_BLOGS_FILTERED):
 	pbar = progbar.start(len(lines))
 
 	for i, l in enumerate(lines):
-		params = l[:-1].split('\t')
-		uid = params[0]
-		mid = params[1]
-		text = params[2]
-		comments_count = int(params[3])
-		blogs.append(BlogInfo(uid, mid, text, comments_count))
+		blogs.append(BlogInfo.loads(l))
 		
 		pbar.update(i + 1)
 

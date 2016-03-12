@@ -19,6 +19,15 @@ def load(fname = JSONS_COMMENT):
 
 	return blogs
 
+def showinfo(blog):
+	for k, v in blog.items():
+		if not k == 'comments':
+			print k, v
+		else:
+			print 'comments:'
+			for com in v:
+				print '\t %s to %s: %s'%(com['from_name'], com['to_name'], com['text'])
+
 def test(fname = JSONS_COMMENT):
 	blogs = load(fname)
 	print len(blogs)

@@ -12,6 +12,10 @@ sys.setdefaultencoding('utf8')
 import cPickle
 import numpy as np
 
+import commdatica
+import blogger
+from utils import progbar
+
 def pkl_dump(d, fname):
 	cPickle.dump(d, open(fname, 'w'))
 
@@ -65,9 +69,48 @@ def select():
 		if len(umtc) >= 400000:
 			break
 
-	print len(umtc)
-	cPickle.dump(umtc, open('output/umtc.pkl', 'w'))
+	fobj = open('output/umtc.txt', 'w')
+	for u, m, t, c in umtc:
+		fobj.write('%s\t%s\t%s\t%d\n'%(u, m, t, c))
+	fobj.close()
+
+def sample():
+	blogs = commdatica.load('output/umtc.txt')
+	
+	has_emo = []
+	no_emo = []
+
+	target = 1000
+	i = 0
+	pbar = progbar.start(target)
+
+	for blog in blogs:
+		if blogger.is_valid(blog.text):
+			if not len(has_emo) >= 500:
+				has_emo.append(blog)
+				i += 1
+	
+		elif blogger.is_valid(blog.text, check_emo = False):
+			if not len(no_emo) >= 500:
+				no_emo.append(blog)
+				i += 1
+
+		pbar.update(i)
+
+	pbar.finish()
+
+	print 'writing to umtc_yes_emo.txt ....',
+	open('output/umtc_yes_emo.txt', 'w').write('\n'.join([repr(blog) for blog in has_emo]))
+	print 'OK'
+
+	print 'writing to umtc_no_emo.txt ....',
+	open('output/umtc_no_emo.txt', 'w').write('\n'.join([repr(blog) for blog in no_emo]))
+	print 'OK'	
+
+	bs = commdatica.load('output/umtc_yes_emo.txt')
+	print len(bs)
 
 if __name__ == '__main__':
 	#export_unmv()
-	select()
+	#select()
+	sample()

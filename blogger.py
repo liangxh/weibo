@@ -72,26 +72,46 @@ def contain_zh(text):
 
 ################################### PUBLIC #########################################
 
-def is_valid(blog):
+def is_valid(blog, check_emo = True):
 	'''
 	shortcut for checking where the blog is valid 
 	'''
-	res = extract(blog)
-	return not res == None
+	return extract(blog, check_emo) is not None
 
-def extract(blog):
+def extract(blog, check_emo = True):
 	'''
 	analyse the blog, if it contains only one distinct emoticon and the text part is not empty,
 	return the text part and emoticon, otherwise None is returned.
 	'''
 
+	# extract the part created by user
+
 	blog = blog.decode('utf8')
 	main_blog = extract_main(blog)
-	emoticons = emotica.extract_emoticons(main_blog)		
 
-	if len(emoticons) == 0:
-		#print 'No Emoticons'
-		return None
+	# extract and check emoticons
+
+	emoticons = emotica.extract_emoticons(main_blog)
+	
+
+	if check_emo:
+		if len(emoticons) == 0:
+			#print 'No Emoticons'
+			return None
+		else:
+			phrases = [emotica.remove_prefix(emo) for emo in emoticons]
+			phrases = set(phrases)
+			if len(phrases) > 1:
+				'''
+				more than one distinct emoticons within this blog
+				'''
+				#print 'Too many phrases'
+				return None
+
+			emo = emotica.remove_prefix(list(phrases)[0])
+	else:
+		emo = None
+	# extract and check the text
 
 	text = emotica.remove_emoticons(main_blog)
 	text = remove_korean(text)
@@ -110,17 +130,6 @@ def extract(blog):
 		'''	
 		return None
 
-	phrases = [emotica.remove_prefix(emo) for emo in emoticons]
-	phrases = set(phrases)
-	#print ', '.join(list(phrases))
-	if len(phrases) > 1:
-		'''
-		more than one distinct emoticons within this blog
-		'''
-		#print 'Too many phrases'
-		return None
-
-	emo = emotica.remove_prefix(list(phrases)[0])
 	text = re.sub('\s+', ' ', text).strip()
 	return text, emo
 
