@@ -238,7 +238,7 @@ def launch(outfile, accounts, bloginfo, n_instance):
 	launcher = WeiboLauncher()
 	launcher.load_accounts(accounts)
 	launcher.load_bloginfo(bloginfo)
-	launcher.init_outfile(outfile, 'w')
+	launcher.init_outfile(outfile, 'a')
 	launcher.launch(n_instance)
 	launcher.close_outfile()
 
